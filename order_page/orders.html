@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./../style.css">
+	<title>Orders</title>
+</head>
+<body>
+	<main>
+		<div class="menu-item">
+			<div class="sect-1">
+				<img src="" onerror="this.src = './img/no_texture.png'">
+			</div>
+			<div class="sect-2">
+				<p id="item-name" style="margin-bottom: 5px;">*temp_onload*</p>
+				<div class="col-1">
+					<p>Pick Up</p>
+					<input id="time" type="time" style="margin: 5px 0;">
+					<input id="date" type="date" style="margin: 5px 0;">
+					<p>Quantity</p>
+					<table id="quantity-selector" class="number-input">
+						<td>&#10094;</td>
+						<td id="quantity-amount" style="cursor: default;">0</td>
+						<td>&#10095;</td>
+					</table>
+				</div>
+				<div class="col-2">
+					<p>Milk</p>
+					<select id="milk-type" style="margin: 5px 0;">
+						<option value="flat_white">Flat White</option>
+						<option value="cappuccino">Cappuccino</option>
+						<option value="latte">Latte</option>
+						<option value="espresso">Espresso</option>
+						<option value="hot_chocolate">Hot Chocolate</option>
+						<option value="chai_latte">Chai Latte</option>
+						<option value="iced_coffee">Iced Coffee</option>
+						<option value="iced_latte">Iced Latte</option>
+					</select>
+					<p>Sugars</p>
+					<table id="sugar-selector" class="number-input">
+						<td>&#10094;</td>
+						<td id="sugar-amount" style="cursor: default;">0</td>
+						<td>&#10095;</td>
+					</table>
+					<div id="add-to-order">Add to Order</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<script defer src="./../main.js"></script>
+	<script defer src="./orders.js"></script>
+</body>
+</html>
