@@ -7,7 +7,7 @@
 	<title>Orders</title>
 </head>
 <body>
-	<main>
+	<template id="menu-item-template">
 		<div class="menu-item">
 			<div class="sect-1">
 				<img src="" onerror="this.src = './img/no_texture.png'">
@@ -20,9 +20,9 @@
 					<input id="date" type="date" style="margin: 5px 0;">
 					<p>Quantity</p>
 					<table id="quantity-selector" class="number-input">
-						<td>&#10094;</td>
+						<td id="decrease">&#10094;</td>
 						<td id="quantity-amount" style="cursor: default;">0</td>
-						<td>&#10095;</td>
+						<td id="increase">&#10095;</td>
 					</table>
 				</div>
 				<div class="col-2">
@@ -39,15 +39,17 @@
 					</select>
 					<p>Sugars</p>
 					<table id="sugar-selector" class="number-input">
-						<td>&#10094;</td>
+						<td id="decrease">&#10094;</td>
 						<td id="sugar-amount" style="cursor: default;">0</td>
-						<td>&#10095;</td>
+						<td id="increase">&#10095;</td>
 					</table>
 					<div id="add-to-order">Add to Order</div>
 				</div>
 			</div>
 		</div>
-	</main>
+	</template>
+
+	<main style="text-align: center;"></main>
 
 	<script defer src="./../main.js"></script>
 	<script defer src="./orders.js"></script>
