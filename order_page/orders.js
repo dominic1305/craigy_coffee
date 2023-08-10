@@ -13,7 +13,7 @@ class MenuItem {
 	translateTime(str) {
 		const hours = Number(str.split(':')[0]);
 		const minutes = Number(str.split(':')[1]);
-		return (hours * 3.6e+6) + (minutes * 60000);
+		return ((hours * 3.6e+6) - (10 * 3.6e+6)) + (minutes * 60000);
 	}
 	get time() {
 		const date = this.element.querySelector('#date').valueAsNumber || 0;
