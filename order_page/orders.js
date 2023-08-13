@@ -34,7 +34,8 @@ class MenuItem {
 	init() {
 		document.querySelector('main').appendChild(document.querySelector('#menu-item-template').content.cloneNode(true));
 		[...document.querySelectorAll('.menu-item')].reverse()[0].id = this.name.replaceAll(' ', '-');
-		this.element.querySelector('#item-name').innerHTML = this.name.charAt(0).toUpperCase() + this.name.substring(1);
+		this.element.querySelector('#item-name').innerHTML = this.name;
+		this.element.querySelector('#menu-item-img').src = `./img/${this.name.replaceAll(' ', '_')}.png`;
 		this.element.querySelector('#quantity-selector > tbody > tr > #decrease').addEventListener('click', () => {//decrease quantity
 			if (this.quantity <= 0) return; //go no smaller
 			this.quantity--;
