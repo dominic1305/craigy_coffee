@@ -5,7 +5,7 @@ html, body {
 }
 
 main {
-	height: 100vh;
+	height: max-content;
 	width: 90vw;
 	margin: 0 5vw;
 }
@@ -19,9 +19,10 @@ main {
 		display: inline-block;
 		vertical-align: top;
 		& img {
+			object-fit: cover;
 			height: 175px;
 			width: 175px;
-			outline: 1px solid black;
+			border: 1px solid black;
 		}
 	}
 	& .sect-2 {
@@ -32,7 +33,14 @@ main {
 		text-align: center;
 		& p {
 			margin: 0;
+			user-select: none;
+			text-transform: capitalize;
 			text-decoration: underline;
+		}
+		& #cost {
+			text-decoration: none;
+			margin-top: 20px;
+			font-size: 20px;
 		}
 		& div {
 			width: 150px;
@@ -50,19 +58,204 @@ main {
 					bottom: 1px;
 				}
 			}
-			& #add-to-order {
-				background-color: skyblue;
-				border-radius: 25px;
-				padding: 5px 10px;
-				width: max-content;
-				cursor: pointer;
-				transition: 250ms;
-				position: relative;
-				top: 10px;
-				&:hover {
-					transform: scale(1.1);
-				}
+		}
+	}
+	& #add-to-order {
+		user-select: none;
+		cursor: pointer;
+		display: block;
+		border: 2px solid black;
+		background-color: skyblue;
+		border-radius: 25px;
+		padding: 5px 10px;
+		width: max-content;
+		transition: 250ms;
+		margin: auto;
+		position: relative;
+		top: 10px;
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+}
+
+.order-placement-menu {
+	visibility: hidden;
+	width: 100vw;
+	height: max-content;
+	padding: 20px 0;
+	background-color: white;
+	outline: 2px solid black;
+	transition: 500ms;
+	position: fixed;
+	bottom: -250px;
+	& > .order-placement-menu-body {
+		height: max-content;
+		width: max-content;
+		max-width: 90vw;
+		transform: translateX(-50%);
+		position: relative;
+		left: 50%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
+		& > * {
+			margin: 10px;
+			white-space: nowrap;
+		}
+		& .place-order-btn {
+			user-select: none;
+			cursor: pointer;
+			width: max-content;
+			background-color: skyblue;
+			padding: 10px 15px;
+			border-radius: 15px;
+			transition: 250ms;
+			font-weight: 700;
+			border: 3px solid black;
+			justify-self: center;
+			&:hover {
+				transform: scale(1.1);
 			}
 		}
+		& .edit-order-btn {
+			user-select: none;
+			cursor: pointer;
+			width: max-content;
+			background-color: skyblue;
+			padding: 5px 10px;
+			border-radius: 15px;
+			transition: 250ms;
+			font-weight: 700;
+			border: 3px solid black;
+			&:hover {
+				transform: scale(1.1);
+			}
+		}
+		& .biscuit-inclusion {
+			user-select: none;
+			cursor: pointer;
+			width: max-content;
+			background-color: #FF4A3F;
+			padding: 5px 10px;
+			border-radius: 15px;
+			transition: 250ms;
+			font-weight: 700;
+			border: 3px solid black;
+			&:hover {
+				transform: scale(1.1);
+			}
+		}
+		& .pickup-input-container {
+			width: max-content;
+			& p {
+				margin: 0;
+				text-align: center;
+				text-decoration: underline;
+			}
+			& input {
+				border: 1px solid black;
+				margin: 10px 0;
+				width: 100%;
+				display: block;
+			}
+		}
+		& .total-price {
+			font-size: 20px;
+		}
+		& textarea {
+			border: 1px solid black;
+			resize: none;
+			font-family: sans-serif;
+		}
+	}
+}
+
+#current-order-modal {
+	background-color: white;
+	border: 4px solid black;
+	outline: 1px solid black;
+	border-radius: 5%;
+	width: 70vh;
+	height: 70vh;
+	& .title {
+		margin: 0;
+		text-align: center;
+		font-weight: 700;
+		text-decoration: underline;
+		font-size: 25px;
+	}
+	& .close-modal-btn {
+		user-select: none;
+		cursor: pointer;
+		width: max-content;
+		background-color: skyblue;
+		padding: 5px 10px;
+		border-radius: 15px;
+		transition: 250ms;
+		font-weight: 700;
+		border: 3px solid black;
+		position: absolute;
+		bottom: 3%;
+		right: 3%;
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+	& .modal-body {
+		width: 90%;
+		height: 80%;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		outline: 2px dashed green;
+		transform: translate(-50%, -50%);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+		& table {
+			width: 100%;
+			& td, th {
+				width: 19.2%;
+				outline: 1px solid black;
+				&:last-child {
+					width: 4%;
+				}
+			}
+			& td {
+				padding: 2px 5px;
+				text-align: right;
+				user-select: none;
+				&:nth-child(5) {
+					cursor: pointer;
+				}
+				&:nth-child(6) {
+					cursor: pointer;
+					& img {
+						transition: 150ms;
+						&:hover {
+							transform: scale(1.1);
+						}
+					}
+				}
+			}
+			& th {
+				background-color: #afafaf;
+			}
+		}
+	}
+	& .blur-backdrop {
+		width: 90%;
+		height: 80%;
+		transition: 250ms;
+		pointer-events: none;
+		background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 1) 100%);
+		transform: translate(-50%, -50%);
+		position: absolute;
+		top: 50%;
+		left: 50%;
 	}
 }

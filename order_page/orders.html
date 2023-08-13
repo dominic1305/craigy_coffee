@@ -15,41 +15,81 @@
 			<div class="sect-2">
 				<p id="item-name" style="margin-bottom: 5px;">*temp_onload*</p>
 				<div class="col-1">
-					<p>Pick Up</p>
-					<input id="time" type="time" style="margin: 5px 0;">
-					<input id="date" type="date" style="margin: 5px 0;">
 					<p>Quantity</p>
 					<table id="quantity-selector" class="number-input">
 						<td id="decrease">&#10094;</td>
-						<td id="quantity-amount" style="cursor: default;">0</td>
+						<td id="quantity-amount" style="cursor: default;">1</td>
 						<td id="increase">&#10095;</td>
 					</table>
-				</div>
-				<div class="col-2">
 					<p>Milk</p>
 					<select id="milk-type" style="margin: 5px 0;">
-						<option value="flat_white">Flat White</option>
-						<option value="cappuccino">Cappuccino</option>
-						<option value="latte">Latte</option>
-						<option value="espresso">Espresso</option>
-						<option value="hot_chocolate">Hot Chocolate</option>
-						<option value="chai_latte">Chai Latte</option>
-						<option value="iced_coffee">Iced Coffee</option>
-						<option value="iced_latte">Iced Latte</option>
+						<option value="dairy">Dairy</option>
+						<option value="skim">Skim</option>
+						<option value="lactose free">Lactose Free</option>
+						<option value="almond">Almond</option>
+						<option value="soy">Soy</option>
+						<option value="oat">Oat</option>
 					</select>
+				</div>
+				<div class="col-2">
 					<p>Sugars</p>
 					<table id="sugar-selector" class="number-input">
 						<td id="decrease">&#10094;</td>
 						<td id="sugar-amount" style="cursor: default;">0</td>
 						<td id="increase">&#10095;</td>
 					</table>
-					<div id="add-to-order">Add to Order</div>
+					<p id="cost"></p>
 				</div>
+				<div id="add-to-order">Add to Order</div>
 			</div>
 		</div>
 	</template>
 
 	<main style="text-align: center;"></main>
+
+	<template id="order-item-template">
+		<tr id="entry">
+			<td id="item"></td>
+			<td id="cost"></td>
+			<td id="milk"></td>
+			<td id="sugars"></td>
+			<td id="biscuit"></td>
+			<td id="delete"><img src="./img/bin.svg" alt="delete"></td>
+		</tr>
+	</template>
+
+	<dialog id="current-order-modal">
+		<p class="title">Current Order</p>
+		<div class="modal-body">
+			<table id="current-order-table">
+				<tr>
+					<th>Item</th>
+					<th>Cost</th>
+					<th>Milk Type</th>
+					<th>Sugars</th>
+					<th>Biscuit</th>
+					<th></th>
+				</tr>
+			</table>
+		</div>
+		<div class="blur-backdrop"></div>
+		<div class="close-modal-btn">Close</div>
+	</dialog>
+
+	<div class="order-placement-menu" data-active="0">
+		<div class="order-placement-menu-body">
+			<textarea id="order-comment" cols="60" rows="10" placeholder="User Comment"></textarea>
+			<div class="edit-order-btn">Edit Order</div>
+			<div class="pickup-input-container">
+				<p>Pick Up Time</p>
+				<input id="pick-up-time" type="time">
+				<input id="pick-up-date" type="date">
+			</div>
+			<p class="total-price">$0.00</p>
+			<div class="biscuit-inclusion" data-state="0">Include Biscuits</div>
+			<div class="place-order-btn">Place Order</div>
+		</div>
+	</div>
 
 	<script defer src="./../main.js"></script>
 	<script defer src="./orders.js"></script>
