@@ -14,7 +14,7 @@
 
 	<?php
 		if (!empty($_POST["submit"])) {
-			$input = json_decode($_POST["input"]);
+			$input = json_decode($_POST["input"]); //input structure = {cmd: string, val: any}
 			switch ($input->cmd) {
 				case "test_response": printf("<p id=\"php-response\">hello</p>"); break;
 				case "get_menu_data": //TEST: to be updated with server response
@@ -29,6 +29,21 @@
 						["item" => "iced latte", "cost" => 5],
 					];
 					printf("<p id=\"php-response\">%s</p>", json_encode($data));
+					break;
+				case "insert_order_data": //TEST: to be update with server response
+					$server_arr = (array) [//data push
+						"placement_time" => $input->val->placement_time,
+						"pickup_time" => $input->val->pickup_time,
+						"order" => json_encode($input->val->order),
+						"comment" => $input->val->comment,
+					];
+					$arr = (array) [//data pull
+						"placement_time" => $server_arr["placement_time"],
+						"pickup_time" => $server_arr["pickup_time"],
+						"order" => json_decode($server_arr["order"]),
+						"comment" => $server_arr["comment"],
+					];
+					printf("<p id=\"php-response\">%s</p>", json_encode($arr));
 					break;
 				default: printf("<p id=\"php-response\">SERVER ERROR: invalid command</p>"); break;
 			}
@@ -50,6 +65,7 @@
 		window.addEventListener('message', (e) => {//receive messages from parent
 			const msg = JSON.parse(e.data);
 			localStorage.setItem('current_cmd', msg.cmd);
+			localStorage.setItem('data', JSON.stringify(msg));
 			document.querySelector('#php-input').value = e.data;
 			document.querySelector('#php-submit').click();
 		});

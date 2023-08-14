@@ -4,15 +4,15 @@ void function() {
 	if (window.location.href.includes('.html')) document.body.innerHTML += '<iframe id="server" style="display: none;" src="./../php_server.php"></iframe>';
 }();
 
-function php_cmd(cmd = 'test_response', inputData) {
+function php_cmd(cmd = 'test_response', input_data) {
 	return new Promise((resolve, reject) => {
-		document.querySelector('#server').contentWindow.postMessage(JSON.stringify({cmd: cmd, val: inputData}), '*');
+		document.querySelector('#server').contentWindow.postMessage(JSON.stringify({cmd: cmd, val: input_data}), '*');
 		window.addEventListener('message', (e) => {//listen for server response
 			const msg = JSON.parse(e.data);
 			if (msg.cmd != cmd) return reject('invalid command response');
 			else if (String(msg.response).includes('SERVER ERROR:')) return reject(msg.response);
 			return resolve(msg.response);
-		});
+		}, {once: true});
 		setTimeout(() => {return reject('SERVER ERROR: timed out');}, 5000); //expire
 	});
 }

@@ -11,7 +11,7 @@ class MenuItem {
 		return document.querySelector(`#${this.name.replaceAll(' ', '-')}`);
 	}
 	get order() {
-		return new OrderItem(this.name, this.cost, this.element.querySelector('#milk-type').value, this.sugars, false);
+		return new OrderItem(this.name, this.cost, this.element.querySelector('#milk-type').value, this.sugars, Boolean(Number(document.querySelector('.biscuit-inclusion').dataset.state)));
 	}
 	error(err) {
 		this.element.querySelector('.error-msg-container').appendChild(document.querySelector('#menu-item-error-msg').content.cloneNode(true));
@@ -31,7 +31,7 @@ class MenuItem {
 	}
 	init() {
 		document.querySelector('main').appendChild(document.querySelector('#menu-item-template').content.cloneNode(true));
-		[...document.querySelectorAll('.menu-item')].reverse()[0].id = this.name.replaceAll(' ', '-');
+		document.querySelector('.menu-item:last-child').id = this.name.replaceAll(' ', '-');
 		this.element.querySelector('#item-name').innerHTML = this.name;
 		this.element.querySelector('#menu-item-img').src = `./img/${this.name.replaceAll(' ', '_')}.png`;
 		this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost)}`;
@@ -39,11 +39,13 @@ class MenuItem {
 			if (this.quantity <= 1) return; //go no smaller
 			this.quantity--;
 			this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
+			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
 		});
 		this.element.querySelector('#quantity-selector > tbody > tr > #increase').addEventListener('click', () => {//increase quantity
 			if (this.quantity >= 50) return; //go no higher
 			this.quantity++;
 			this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
+			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
 		});
 		this.element.querySelector('#sugar-selector > tbody > tr > #decrease').addEventListener('click', () => {//decrease sugar
 			if (this.sugars <= 0) return; //go no smaller
@@ -57,7 +59,7 @@ class MenuItem {
 		});
 		this.element.querySelector('#add-to-order').addEventListener('click', () => {//add to order array
 			for (let i = 0; i < this.quantity; i++) {
-				if (currentOrder.length >= 50) return this.error('Invalid: Too Many Order Items');
+				if (currentOrder.length >= 50) {this.error('Invalid: Too Many Order Items'); break;}
 				currentOrder.push(this.order);
 			}
 			if (currentOrder.length > 0) togglePlacementMenu(true);
@@ -79,7 +81,7 @@ class OrderItem {
 		return document.querySelectorAll('#entry')[currentOrder.indexOf(this)];
 	}
 	deload() {
-		if (this.element) document.querySelector('#current-order-table').removeChild(this.element);
+		if (this.element != null) document.querySelector('#current-order-table').removeChild(this.element);
 	}
 	delete() {
 		this.deload();
@@ -164,6 +166,10 @@ document.querySelector('.close-modal-btn').addEventListener('click', () => {//cl
 	document.querySelector('#current-order-modal').close();
 });
 
+document.querySelector('.clear-order-modal-btn').addEventListener('click', () => {//clear current order
+	currentOrder.forEach(bin => bin.delete());
+})
+
 document.querySelector('.biscuit-inclusion').addEventListener('click', () => {//toggle total biscuit content
 	const active = !Boolean(Number(document.querySelector('.biscuit-inclusion').dataset.state));
 	document.querySelector('.biscuit-inclusion').dataset.state = Number(active);
@@ -178,7 +184,9 @@ document.querySelector('.place-order-btn').addEventListener('click', () => {
 		order: currentOrder,
 		comment: document.querySelector('#order-comment').value,
 	};
-	console.log(JSON.stringify(obj));
+	php_cmd('insert_order_data', obj).then((msg) => {
+		console.log(msg);
+	}).catch(err => alert(err));
 });
 
 document.querySelector('.modal-body').addEventListener('scroll', () => {//disable blur effect on modal body if last entry is visible to browser | bit hacky but works... kinda
