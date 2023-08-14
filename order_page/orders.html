@@ -7,8 +7,13 @@
 	<title>Orders</title>
 </head>
 <body>
+	<template id="menu-item-error-msg">
+		<p id="error"></p>
+	</template>
+	
 	<template id="menu-item-template">
 		<div class="menu-item">
+			<div class="error-msg-container"></div>
 			<div class="sect-1">
 				<img id="menu-item-img" src="" onerror="this.src = './img/no_texture.png'" draggable="false">
 			</div>

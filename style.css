@@ -14,6 +14,8 @@ main {
 	margin: 5px 20px;
 	padding: 10px 25px;
 	display: inline-block;
+	user-select: none;
+	position: relative;
 	outline: 1px solid black;
 	& div {
 		display: inline-block;
@@ -75,6 +77,24 @@ main {
 		top: 10px;
 		&:hover {
 			transform: scale(1.1);
+		}
+	}
+	& .error-msg-container {
+		margin: 0;
+		text-align: center;
+		font-weight: 700;
+		transform: translate(-50%, -50%);
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		& #error {
+			margin: 0;
+			font-size: 20px;
+			pointer-events: none;
+			white-space: nowrap;
+			transform: translateX(-50%);
+			text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+			position: absolute;
 		}
 	}
 }
@@ -166,6 +186,7 @@ main {
 		}
 		& textarea {
 			border: 1px solid black;
+			white-space: break-spaces;
 			resize: none;
 			font-family: sans-serif;
 		}

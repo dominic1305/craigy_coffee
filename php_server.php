@@ -30,7 +30,7 @@
 					];
 					printf("<p id=\"php-response\">%s</p>", json_encode($data));
 					break;
-				default: printf("<p id=\"php-response\">ERROR: invalid command</p>"); break;
+				default: printf("<p id=\"php-response\">SERVER ERROR: invalid command</p>"); break;
 			}
 		}
 	?>

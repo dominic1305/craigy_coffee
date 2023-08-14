@@ -13,6 +13,22 @@ class MenuItem {
 	get order() {
 		return new OrderItem(this.name, this.cost, this.element.querySelector('#milk-type').value, this.sugars, false);
 	}
+	error(err) {
+		this.element.querySelector('.error-msg-container').appendChild(document.querySelector('#menu-item-error-msg').content.cloneNode(true));
+		const element = this.element.querySelector('#error:last-child');
+		element.innerHTML = err;
+		setTimeout(() => {
+			let opacity = 100;
+			const interval = setInterval(() => {//fade animation
+				opacity--;
+				element.style.opacity = `${opacity}%`;
+				if (opacity < 0) {
+					clearInterval(interval);
+					this.element.querySelector('.error-msg-container').removeChild(element);
+				}
+			}, 10);
+		}, 250);
+	}
 	init() {
 		document.querySelector('main').appendChild(document.querySelector('#menu-item-template').content.cloneNode(true));
 		[...document.querySelectorAll('.menu-item')].reverse()[0].id = this.name.replaceAll(' ', '-');
@@ -41,6 +57,7 @@ class MenuItem {
 		});
 		this.element.querySelector('#add-to-order').addEventListener('click', () => {//add to order array
 			for (let i = 0; i < this.quantity; i++) {
+				if (currentOrder.length >= 50) return this.error('Invalid: Too Many Order Items');
 				currentOrder.push(this.order);
 			}
 			if (currentOrder.length > 0) togglePlacementMenu(true);
@@ -97,7 +114,7 @@ document.body.onload = () => {
 		for (const obj of JSON.parse(msg)) {
 			menuItems.push(new MenuItem(obj.item, obj.cost).init());
 		}
-	}).catch(err => alert(`An Error Occured: ${err}`));
+	}).catch(err => alert(err));
 	let date = new Date();
 	document.querySelector('#pick-up-date').value = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 	document.querySelector('#pick-up-date').min = document.querySelector('#pick-up-date').value;
@@ -165,7 +182,7 @@ document.querySelector('.place-order-btn').addEventListener('click', () => {
 });
 
 document.querySelector('.modal-body').addEventListener('scroll', () => {//disable blur effect on modal body if last entry is visible to browser | bit hacky but works... kinda
-	document.querySelector('.blur-backdrop').style.opacity = ([...document.querySelectorAll('#entry')].reverse()[0].getBoundingClientRect().bottom <= window.innerHeight) ? '0%' : '100%';
+	document.querySelector('.blur-backdrop').style.opacity = (document.querySelector('#entry:last-child').getBoundingClientRect().bottom <= window.innerHeight) ? '0%' : '100%';
 });
 
 function togglePlacementMenu(active = !Boolean(Number(document.querySelector('.order-placement-menu').dataset.active))) {
