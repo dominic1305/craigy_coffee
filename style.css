@@ -297,3 +297,88 @@ main {
 		left: 50%;
 	}
 }
+
+.admin-order-table {
+	width: 100%;
+	user-select: none;
+	margin-bottom: 10px;
+	border-collapse: collapse;
+	& tr, td, th {
+		border: 1px solid black;
+	}
+	& > tbody > tr:first-child {
+		background-color: #585858;
+		color: white;
+		letter-spacing: 1px;
+		& th {
+			width: 20%;
+		}
+		& th:nth-child(5), th:last-child {
+			cursor: pointer;
+			width: 2.5%;
+			& img {
+				transition: 250ms;
+				transform: translateY(2px);
+				&:hover {
+					transform: translateY(2px) scale(1.1);
+				}
+			}
+		}
+	}
+	& .active-order {
+		width: 100%;
+		border-collapse: collapse;
+		text-transform: capitalize;
+		& tr:first-child {
+			background-color: #818181;
+		}
+		& tr:not(tr:first-child) > td {
+			width: 20%;
+			text-align: right;
+			padding: 0 10px;
+		}
+	}
+}
+
+.confirm-backdrop {
+	user-select: none;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.5);
+	position: fixed;
+	top: 0;
+	& .confirm-container {
+		font-size: 20px;
+		max-width: 300px;
+		text-transform: capitalize;
+		background-color: white;
+		padding: 10px 20px;
+		border-radius: 10px;
+		border: 2px solid black;
+		transform: translate(-50%, -50%);
+		position: fixed;
+		left: 50%;
+		top: 50%;
+		& .head > p {
+			margin: 0;
+			margin-bottom: 5px;
+			text-align: center;
+		}
+		& .foot {
+			display: flex;
+			flex-wrap: nowrap;
+			justify-content: center;
+			& div {
+				margin: 0 10px;
+				padding: 2px 5px;
+				border-radius: 10px;
+				border: 1px solid black;
+				transition: 250ms;
+				cursor: pointer;
+				&:hover {
+					transform: scale(1.1);
+				}
+			}
+		}
+	}
+}

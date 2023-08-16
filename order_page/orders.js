@@ -78,7 +78,7 @@ class OrderItem {
 		this.biscuit = Boolean(biscuit);
 	}
 	get element() {
-		return document.querySelectorAll('#entry')[currentOrder.indexOf(this)];
+		return document.querySelector(`#entry:nth-child(${currentOrder.indexOf(this) + 1})`);
 	}
 	deload() {
 		if (this.element != null) document.querySelector('#current-order-table').removeChild(this.element);
@@ -125,23 +125,6 @@ document.body.onload = () => {
 	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`); //set max date value
 }
 
-function formatDate(str) {
-	let year = String(str).split('-')[0];
-	let month = String(str).split('-')[1];
-	let day = String(str).split('-')[2];
-	if (month.length == 1) month = '0' + month;
-	if (day.length == 1) day = '0' + day;
-	return `${year}-${month}-${day}`;
-}
-
-function formatTime(str) {
-	let hours = String(str).split(':')[0];
-	let minutes = String(str).split(':')[1];
-	if (hours.length == 1) hours = '0' + hours;
-	if (minutes.length == 1) minutes = '0' + minutes;
-	return `${hours}:${minutes}`;
-}
-
 function getPickUpTime() {
 	const date = Number(document.querySelector('#pick-up-date').valueAsNumber) || 0;
 	const time = translateTimeStr(document.querySelector('#pick-up-time').value || '00:00');
@@ -177,17 +160,26 @@ document.querySelector('.biscuit-inclusion').addEventListener('click', () => {//
 	currentOrder.forEach(bin => bin.biscuit = active);
 });
 
-document.querySelector('.place-order-btn').addEventListener('click', () => {
-	const obj = {
-		placement_time: new Date().valueOf(),
-		pickup_time: getPickUpTime(),
-		order: currentOrder,
-		comment: document.querySelector('#order-comment').value,
-	};
-	php_cmd('insert_order_data', obj).then((msg) => {
-		console.log(msg);
-	}).catch(err => alert(err));
-});
+document.querySelector('.place-order-btn').addEventListener('click', () => placeOrder());
+
+function placeOrder(override = false) {
+	if (currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count) >= 100 && !override) {//check with user
+		confirmPrompt(`are you sure you want to spend $${suffixApplier(currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count))} on this order`).then((bool) => {
+			if (bool) placeOrder(true);
+		}).catch(err => alert(err));
+	} else {
+		const obj = {
+			placement_time: new Date().valueOf(),
+			pickup_time: getPickUpTime(),
+			order: currentOrder,
+			comment: document.querySelector('#order-comment').value,
+		};
+		php_cmd('insert_order_data', obj).then((msg) => {
+			console.log(msg);
+			document.querySelector('.clear-order-modal-btn').click();
+		}).catch(err => alert(err));
+	}
+}
 
 document.querySelector('.modal-body').addEventListener('scroll', () => {//disable blur effect on modal body if last entry is visible to browser | bit hacky but works... kinda
 	document.querySelector('.blur-backdrop').style.opacity = (document.querySelector('#entry:last-child').getBoundingClientRect().bottom <= window.innerHeight) ? '0%' : '100%';

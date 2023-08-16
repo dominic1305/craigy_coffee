@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./../style.css">
+    <title>Admin</title>
+</head>
+<body>
+    <template id="active-order-row-template">
+        <tr id="active-order-row">
+            <td id="item"></td>
+            <td id="cost"></td>
+            <td id="milk-type"></td>
+            <td id="sugars"></td>
+            <td id="biscuit"></td>
+        </tr>
+    </template>
+
+    <template id="admin-order-object-template">
+        <table class="admin-order-table">
+            <tr>
+                <th id="user" style="text-transform: capitalize;">User:</th>
+                <th id="pickup-time">Pickup Time:</th>
+                <th id="placement-time">Placement Time:</th>
+                <th id="cost">cost:</th>
+                <th><img src="./img/file_icon.svg" alt="comment_icon"></th>
+                <th id="delete"><img src="./img/bin.svg" alt="bin_icon"></th>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table class="active-order">
+                        <tr>
+                            <th>Item</th>
+                            <th>Cost</th>
+                            <th>Milk Type</th>
+                            <th>Sugars</th>
+                            <th>Biscuit</th>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <main></main>
+
+    <script defer src="./../main.js"></script>
+    <script defer src="./admin.js"></script>
+</body>
+</html>
