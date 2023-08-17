@@ -78,7 +78,7 @@ class OrderItem {
 		this.biscuit = Boolean(biscuit);
 	}
 	get element() {
-		return document.querySelector(`#entry:nth-child(${currentOrder.indexOf(this) + 1})`);
+		return document.querySelectorAll('#entry')[currentOrder.indexOf(this)];
 	}
 	deload() {
 		if (this.element != null) document.querySelector('#current-order-table').removeChild(this.element);

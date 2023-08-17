@@ -117,13 +117,13 @@ function enforceByteSize(str, register) {//adds zeros to stay within byte size
 }
 
 function hashGen (str, seed) {
-    let h1 = 0xdeadbeef ^ seed;
+	let h1 = 0xdeadbeef ^ seed;
 	let h2 = 0x41c6ce57 ^ seed;
-    for(let i = 0; i < str.length; i++) {
-        h1 = Math.imul(h1 ^ str.charCodeAt(i), 2654435761);
-        h2 = Math.imul(h2 ^ str.charCodeAt(i), 1597334677);
-    }
-    h1 = Math.imul(h1 ^ (h1 >> 16), 2246822507);
-    h2 = Math.imul(h2 ^ (h2 >> 16), 2246822507);
-    return (4294967296 * (2097151 & h2) + (h1 >> 0)).toString(32);
+	for(let i = 0; i < str.length; i++) {
+		h1 = Math.imul(h1 ^ str.charCodeAt(i), 2654435761);
+		h2 = Math.imul(h2 ^ str.charCodeAt(i), 1597334677);
+	}
+	h1 = Math.imul(h1 ^ (h1 >> 16), 2246822507);
+	h2 = Math.imul(h2 ^ (h2 >> 16), 2246822507);
+	return (4294967296 * (2097151 & h2) + (h1 >> 0)).toString(32);
 }

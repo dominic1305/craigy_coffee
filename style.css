@@ -303,6 +303,9 @@ main {
 	user-select: none;
 	margin-bottom: 10px;
 	border-collapse: collapse;
+	position: relative;
+	--comment-text: "*temp_onload*";
+	--comment-opacity: 0;
 	& tr, td, th {
 		border: 1px solid black;
 	}
@@ -337,6 +340,24 @@ main {
 			text-align: right;
 			padding: 0 10px;
 		}
+	}
+	&::before {
+		opacity: var(--comment-opacity);
+		content: var(--comment-text);
+		white-space: break-spaces;
+		max-width: 90%;
+		max-height: 90%;
+		overflow-x: hidden;
+		overflow-y: auto;
+		transition: 150ms;
+		background-color: white;
+		border: 3px solid black;
+		border-radius: 10px;
+		padding: 5px 10px;
+		transform: translate(-50%, -50%);
+		position: absolute;
+		top: 50%;
+		left: 50%;
 	}
 }
 
