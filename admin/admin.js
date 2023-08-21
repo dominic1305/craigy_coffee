@@ -1,7 +1,7 @@
 'use strict';
 
 class ActiveOrder {
-	constructor(placement_time, pickup_time, order, comment) {
+	constructor(placement_time, pickup_time, order = [], comment) {
 		this.placement_time = new Date(placement_time);
 		this.pickup_time = new Date(pickup_time);
 		this.order = Array(...order);
@@ -22,11 +22,10 @@ class ActiveOrder {
 	}
 	async delete() {
 		await php_cmd('delete_active_order', this).then((msg) => {
-			if (Boolean(msg)) {
-				document.querySelector('main').removeChild(this.element);
-				activeOrders[activeOrders.indexOf(this)] = null;
-				activeOrders = activeOrders.filter(bin => bin instanceof ActiveOrder);
-			}
+			if (!Boolean(msg)) return;
+			document.querySelector('main').removeChild(this.element);
+			activeOrders[activeOrders.indexOf(this)] = null;
+			activeOrders = activeOrders.filter(bin => bin instanceof ActiveOrder);
 		}).catch(err => alert(err));
 	}
 	loadComment() {
@@ -57,7 +56,7 @@ class ActiveOrder {
 	}
 }
 
-let activeOrders = [new ActiveOrder(0, 0, [0], 0)].filter(() => false);
+let activeOrders = [].filter(() => false);
 
 document.body.onload = () => {
 	php_cmd('get_admin_order_data').then((msg) => {

@@ -34,6 +34,12 @@ function formatTime(str) {
 	return `${hours}:${minutes}`;
 }
 
+Date.prototype.setDay = function(newDay) {
+	const day = this.getDay() || 7;
+	if (day != newDay) this.setHours(-24 * (day - newDay));
+	return this;
+}
+
 function confirmPrompt(txt = 'demo') {
 	return new Promise((resolve, reject) => {
 		if (document.querySelector('.confirm-backdrop') != null) return reject('too many instances');

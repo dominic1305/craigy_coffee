@@ -11,7 +11,7 @@ class MenuItem {
 		return document.querySelector(`#${this.name.replaceAll(' ', '-')}`);
 	}
 	get order() {
-		return new OrderItem(this.name, this.cost, this.element.querySelector('#milk-type').value, this.sugars, Boolean(Number(document.querySelector('.biscuit-inclusion').dataset.state)));
+		return new OrderItem(this.name, this.cost, this.element.querySelector('#milk-type').value, this.sugars, Boolean(Number(document.querySelector('.biscuit-inclusion').dataset['state'])));
 	}
 	error(err) {
 		this.element.querySelector('.error-msg-container').appendChild(document.querySelector('#menu-item-error-msg').content.cloneNode(true));
@@ -117,17 +117,33 @@ document.body.onload = () => {
 			menuItems.push(new MenuItem(obj.item, obj.cost).init());
 		}
 	}).catch(err => alert(err));
-	let date = new Date();
+	let date = new Date().setDay(1);
 	document.querySelector('#pick-up-date').value = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 	document.querySelector('#pick-up-date').min = document.querySelector('#pick-up-date').value;
-	document.querySelector('#pick-up-time').value = formatTime(`${date.getHours()}:00`);
-	date = new Date(new Date().valueOf() + 6.048e+8); //6.048e+8 milliseconds = 7 day offset
+	date = new Date(date.valueOf() + 864e+5 * 4); //864e+5 milliseconds = 1 day offset
 	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`); //set max date value
 }
 
+let invalidPickupTimeAnimation;
+
 function getPickUpTime() {
 	const date = Number(document.querySelector('#pick-up-date').valueAsNumber) || 0;
-	const time = translateTimeStr(document.querySelector('#pick-up-time').value || '00:00');
+	try {
+		var time = translateTimeStr([...document.querySelectorAll('.time-select > input')].filter(bin => bin.checked)[0].dataset['time'] || '00:00');
+	} catch {//error animation
+		clearInterval(invalidPickupTimeAnimation);
+		let opacity = 100;
+		document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = '1px solid rgb(255, 0, 0, 1)');
+		invalidPickupTimeAnimation = setInterval(() => {//fade animation
+			opacity--;
+			document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = `1px solid rgb(255, 0, 0, ${opacity / 100})`);
+			if (opacity <= 0) {//animation is done
+				clearInterval(invalidPickupTimeAnimation);
+				document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = '');
+			}
+		}, 10);
+		throw 0; //return
+	}
 	return date + time;
 }
 
@@ -143,19 +159,17 @@ document.querySelector('.edit-order-btn').addEventListener('click', () => {//ope
 });
 
 document.querySelector('.close-modal-btn').addEventListener('click', () => {//close edit order modal
-	document.querySelectorAll('#entry').forEach((bin => {
-		document.querySelector('#current-order-table').removeChild(bin);
-	}))
+	currentOrder.forEach(bin => bin.deload());
 	document.querySelector('#current-order-modal').close();
 });
 
 document.querySelector('.clear-order-modal-btn').addEventListener('click', () => {//clear current order
 	currentOrder.forEach(bin => bin.delete());
-})
+});
 
 document.querySelector('.biscuit-inclusion').addEventListener('click', () => {//toggle total biscuit content
-	const active = !Boolean(Number(document.querySelector('.biscuit-inclusion').dataset.state));
-	document.querySelector('.biscuit-inclusion').dataset.state = Number(active);
+	const active = !Boolean(Number(document.querySelector('.biscuit-inclusion').dataset['state']));
+	document.querySelector('.biscuit-inclusion').dataset['state'] = Number(active);
 	document.querySelector('.biscuit-inclusion').style.backgroundColor = (active) ? 'lightgreen' : '#FF4A3F';
 	currentOrder.forEach(bin => bin.biscuit = active);
 });
@@ -167,7 +181,7 @@ function placeOrder(override = false) {
 		confirmPrompt(`are you sure you want to spend $${suffixApplier(currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count))} on this order`).then((bool) => {
 			if (bool) placeOrder(true);
 		}).catch(err => alert(err));
-	} else {
+	} else try {
 		const obj = {
 			placement_time: new Date().valueOf(),
 			pickup_time: getPickUpTime(),
@@ -178,6 +192,8 @@ function placeOrder(override = false) {
 			console.log(msg);
 			document.querySelector('.clear-order-modal-btn').click();
 		}).catch(err => alert(err));
+	} catch (err) {
+		if (err != 0) console.error(err);
 	}
 }
 
@@ -185,8 +201,8 @@ document.querySelector('.modal-body').addEventListener('scroll', () => {//disabl
 	document.querySelector('.blur-backdrop').style.opacity = (document.querySelector('#entry:last-child').getBoundingClientRect().bottom <= window.innerHeight) ? '0%' : '100%';
 });
 
-function togglePlacementMenu(active = !Boolean(Number(document.querySelector('.order-placement-menu').dataset.active))) {
-	document.querySelector('.order-placement-menu').dataset.active = Number(active);
+function togglePlacementMenu(active = !Boolean(Number(document.querySelector('.order-placement-menu').dataset['active']))) {
+	document.querySelector('.order-placement-menu').dataset['active'] = Number(active);
 	if (!active) document.querySelector('.order-placement-menu').style.transition = '500ms';
 	document.querySelector('main').style.marginBottom = (!active) ? '0px' : `${parseInt(window.getComputedStyle(document.querySelector('.order-placement-menu')).height) + 50}px`;
 	document.querySelector('.order-placement-menu').style.visibility = (!active) ? 'hidden' : 'visible';

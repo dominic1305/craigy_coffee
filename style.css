@@ -169,6 +169,15 @@ main {
 		}
 		& .pickup-input-container {
 			width: max-content;
+			& .time-select {
+				margin: 3px 0;
+				text-decoration: none;
+				& input {
+					width: 20px;
+					display: inline-block;
+					margin: 0;
+				}
+			}
 			& p {
 				margin: 0;
 				text-align: center;
