@@ -56,7 +56,7 @@ class ActiveOrder {
 	}
 }
 
-let activeOrders = [].filter(() => false);
+let activeOrders = [new ActiveOrder()].filter(() => false);
 
 document.body.onload = () => {
 	php_cmd('get_admin_order_data').then((msg) => {

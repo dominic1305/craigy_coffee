@@ -61,16 +61,16 @@
 		void function() {
 			const php_response = document.querySelector('#php-response') || document.querySelector('.php-response');
 			if (php_response != null) {//response found
-				window.parent.postMessage(JSON.stringify({cmd: stringEncrypter(localStorage.getItem('current_cmd'), 'decode', 36), response: php_response.innerHTML}), '*');
+				window.parent.postMessage(stringEncrypter(JSON.stringify({cmd: stringEncrypter(localStorage.getItem('current_cmd'), 'decode', 36), response: php_response.innerHTML}), 'encode', 32), '*');
 				localStorage.removeItem('current_cmd');
 				document.body.removeChild(php_response);
 			}
 		}();
 
 		window.addEventListener('message', (e) => {//receive messages from parent
-			const msg = JSON.parse(e.data);
+			const msg = JSON.parse(stringEncrypter(e.data, 'decode', 16));
 			localStorage.setItem('current_cmd', stringEncrypter(msg.cmd, 'encode', 36));
-			document.querySelector('#php-input').value = e.data;
+			document.querySelector('#php-input').value = JSON.stringify(msg);
 			document.querySelector('#php-submit').click();
 		});
 	</script>

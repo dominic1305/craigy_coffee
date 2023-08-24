@@ -35,24 +35,24 @@ class MenuItem {
 		this.element.querySelector('#item-name').innerHTML = this.name;
 		this.element.querySelector('#menu-item-img').src = `./img/${this.name.replaceAll(' ', '_')}.png`;
 		this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost)}`;
-		this.element.querySelector('#quantity-selector > tbody > tr > #decrease').addEventListener('click', () => {//decrease quantity
+		this.element.querySelector('#quantity-selector #decrease').addEventListener('click', () => {//decrease quantity
 			if (this.quantity <= 1) return; //go no smaller
 			this.quantity--;
 			this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
 			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
 		});
-		this.element.querySelector('#quantity-selector > tbody > tr > #increase').addEventListener('click', () => {//increase quantity
+		this.element.querySelector('#quantity-selector #increase').addEventListener('click', () => {//increase quantity
 			if (this.quantity >= 50) return; //go no higher
 			this.quantity++;
 			this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
 			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
 		});
-		this.element.querySelector('#sugar-selector > tbody > tr > #decrease').addEventListener('click', () => {//decrease sugar
+		this.element.querySelector('#sugar-selector #decrease').addEventListener('click', () => {//decrease sugar
 			if (this.sugars <= 0) return; //go no smaller
 			this.sugars--;
 			this.element.querySelector('#sugar-amount').innerHTML = this.sugars;
 		});
-		this.element.querySelector('#sugar-selector > tbody > tr > #increase').addEventListener('click', () => {//increase sugar
+		this.element.querySelector('#sugar-selector #increase').addEventListener('click', () => {//increase sugar
 			if (this.sugars >= 3) return; //go no higher
 			this.sugars++;
 			this.element.querySelector('#sugar-amount').innerHTML = this.sugars;
@@ -133,10 +133,10 @@ function getPickUpTime() {
 	} catch {//error animation
 		clearInterval(invalidPickupTimeAnimation);
 		let opacity = 100;
-		document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = '1px solid rgb(255, 0, 0, 1)');
+		document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = '1px solid rgba(255, 0, 0, 1)');
 		invalidPickupTimeAnimation = setInterval(() => {//fade animation
 			opacity--;
-			document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = `1px solid rgb(255, 0, 0, ${opacity / 100})`);
+			document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = `1px solid rgba(255, 0, 0, ${opacity / 100})`);
 			if (opacity <= 0) {//animation is done
 				clearInterval(invalidPickupTimeAnimation);
 				document.querySelectorAll('.time-select').forEach(bin => bin.style.outline = '');

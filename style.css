@@ -412,3 +412,34 @@ main {
 		}
 	}
 }
+
+.login-container {
+	font-size: 20px;
+	user-select: none;
+	margin: 40px 0 0 20px;
+	& input {
+		transform: translateY(-1px);
+	}
+	& table {
+		border-collapse: collapse;
+		& td:first-child {
+			padding-left: 5px;
+		}
+		& td:last-child {
+			padding: 2px 5px 2px 0;
+		}
+	}
+	& .submit-btn {
+		margin-top: 15px;
+		width: max-content;
+		background-color: skyblue;
+		padding: 5px 10px;
+		transition: 250ms;
+		cursor: pointer;
+		border-radius: 15px;
+		border: 2px solid black;
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+}

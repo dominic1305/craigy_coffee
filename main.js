@@ -6,9 +6,9 @@ void function() {
 
 function php_cmd(cmd = 'test_response', input_data) {
 	return new Promise((resolve, reject) => {
-		document.querySelector('#server').contentWindow.postMessage(JSON.stringify({cmd: cmd, val: input_data}), '*');
+		document.querySelector('#server').contentWindow.postMessage(stringEncrypter(JSON.stringify({cmd: cmd, val: input_data}), 'encode', 16), '*');
 		window.addEventListener('message', (e) => {//listen for server response
-			const msg = JSON.parse(e.data);
+			const msg = JSON.parse(stringEncrypter(e.data, 'decode', 32));
 			if (msg.cmd != cmd) return reject('invalid command response');
 			else if (String(msg.response).includes('SERVER ERROR:')) return reject(msg.response);
 			return resolve(msg.response);
