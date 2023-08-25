@@ -15,7 +15,7 @@
 		<div class="menu-item">
 			<div class="error-msg-container"></div>
 			<div class="sect-1">
-				<img id="menu-item-img" src="" onerror="this.src = './img/no_texture.png'" draggable="false">
+				<img id="menu-item-img" src="" onerror="this.src = './../img/no_texture.png'" draggable="false">
 			</div>
 			<div class="sect-2">
 				<p id="item-name" style="margin-bottom: 5px;">*temp_onload*</p>
@@ -50,7 +50,13 @@
 		</div>
 	</template>
 
-	<main style="text-align: center;"></main>
+	<div class="navbar">
+		<img src="./../img/logo.jpg" style="height: 100px;" alt="logo" draggable="false" onclick="window.location.assign('./../index.html')">
+		<p id="welcome-txt">welcome user</p>
+		<p id="logout-btn">logout</p>
+	</div>
+
+	<main style="text-align: center; margin-top: 10px;"></main>
 
 	<template id="order-item-template">
 		<tr id="entry">

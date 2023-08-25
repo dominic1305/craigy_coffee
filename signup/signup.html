@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="./../style.css">
-	<title>Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./../style.css">
+    <title>Sign Up</title>
 </head>
 <body>
 
-	<div class="navbar">
+    <div class="navbar">
 		<img src="./../img/logo.jpg" style="height: 100px;" alt="logo" draggable="false" onclick="window.location.assign('./../index.html')">
-		<p onclick="window.location.assign('./../signup/signup.html')">sign up</p>
+		<p onclick="window.location.assign('./../login/login.html')">login</p>
 		<p id="logout-btn"></p>
 	</div>
 
-	<main>
-		<h1 style="user-select: none;">Login</h1>
+    <main>
+        <h1 style="user-select: none;">Sign Up</h1>
 		<div class="login-container">
 			<table>
 				<tr>
@@ -27,12 +27,12 @@
 					<td><input id="password" type="password"></td>
 				</tr>
 			</table>
-			<p class="error-msg">Invalid Username or Password</p>
+            <p class="error-msg"></p>
 			<div class="submit-btn">Submit</div>
 		</div>
 	</main>
 
-	<script src="./../main.js"></script>
-	<script defer src="./login.js"></script>
+    <script src="./../main.js"></script>
+    <script defer src="./signup.js"></script>
 </body>
 </html>

@@ -3,9 +3,48 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./style.css">
 	<title>Home</title>
 </head>
 <body>
 
+	<div class="navbar">
+		<img src="./../img/logo.jpg" style="height: 15vh;" alt="logo" draggable="false" onclick="window.location.assign('./index.html')">
+		<p id="logout-btn"></p>
+	</div>
+
+	<main style="margin-top: 40px; display: flex; justify-content: space-between; align-items: center;">
+		<div class="index-input-container">
+			<a href="./signup/signup.html">sign up</a>
+			<a href="./login/login.html">login</a>
+			<a href="./admin_login/admin_login.html">admin login</a>
+		</div>
+		<div class="index-carousel">
+			<img class="inactive" src="./order_page/img/cappuccino.png" draggable="false">
+			<img class="inactive" src="./order_page/img/chai_latte.png" draggable="false">
+			<img class="inactive" src="./order_page/img/espresso.png" draggable="false">
+			<img class="inactive" src="./order_page/img/flat_white.png" draggable="false">
+			<img class="inactive" src="./order_page/img/hot_chocolate.png" draggable="false">
+			<img class="inactive" src="./order_page/img/iced_coffee.png" draggable="false">
+			<img class="offload" src="./order_page/img/iced_latte.png" draggable="false">
+			<img class="active" src="./order_page/img/latte.png" draggable="false">
+		</div>
+	</main>
+
+	<script src="./main.js"></script>
+	<script defer>
+		document.body.onload = () => {
+			const items = document.querySelectorAll('.index-carousel > img');
+			const counter = function*() {
+				for (let i = 0; true; i++) yield i % 8;
+			}();
+			setInterval(() => {
+				const i = counter.next().value;
+				items.forEach(bin => bin.className = 'inactive');
+				(i != 0) ? items[i - 1].className = 'offload' : items[7].className = 'offload';
+				items[i].className = 'active';
+			}, 3000);
+		}
+	</script>
 </body>
 </html>

@@ -111,7 +111,13 @@ class OrderItem {
 const menuItems = [new MenuItem()].filter(() => false);
 let currentOrder = [new OrderItem()].filter(() => false);
 
-document.body.onload = () => {
+document.body.onload = async () => {
+	await php_cmd('read_credential_cache').then((msg) => {//check login validity
+		const obj = JSON.parse(stringEncrypter(msg, 'decode', 6));
+		if (!obj['login'] && obj['rank'] != 'user') {//invalid login
+			window.location.assign('./../index.html');
+		} else document.querySelector('#welcome-txt').innerHTML = `welcome ${obj['user']}`;
+	}).catch(err => alert(err));
 	php_cmd('get_menu_data').then((msg) => {
 		for (const obj of JSON.parse(msg)) {
 			menuItems.push(new MenuItem(obj.item, obj.cost).init());
@@ -183,6 +189,7 @@ function placeOrder(override = false) {
 		}).catch(err => alert(err));
 	} else try {
 		const obj = {
+			user: document.querySelector('#welcome-txt').innerHTML.slice(8),
 			placement_time: new Date().valueOf(),
 			pickup_time: getPickUpTime(),
 			order: currentOrder,

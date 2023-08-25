@@ -1,7 +1,8 @@
 'use strict';
 
 class ActiveOrder {
-	constructor(placement_time, pickup_time, order = [], comment) {
+	constructor(username, placement_time, pickup_time, order = [], comment) {
+		this.username = String(username);
 		this.placement_time = new Date(placement_time);
 		this.pickup_time = new Date(pickup_time);
 		this.order = Array(...order);
@@ -35,7 +36,7 @@ class ActiveOrder {
 	init() {
 		document.querySelector('main').appendChild(document.querySelector('#admin-order-object-template').content.cloneNode(true));
 		setTimeout(() => {//wait to load element fully
-			this.element.querySelector('#user').innerHTML = 'User: billy bob john'; //TODO: update order placement system to include user name
+			this.element.querySelector('#user').innerHTML = `User: ${this.username}`;
 			this.element.querySelector('#pickup-time').innerHTML = `Pickup Time: ${this.formatted_pickup_time}`;
 			this.element.querySelector('#placement-time').innerHTML = `Placement Time: ${this.formatted_placement_time}`
 			this.element.querySelector('#cost').innerHTML = `Cost: $${suffixApplier(this.order.map(bin => bin.cost).reduce((bin, count) => bin + count))}`;
@@ -58,10 +59,14 @@ class ActiveOrder {
 
 let activeOrders = [new ActiveOrder()].filter(() => false);
 
-document.body.onload = () => {
+document.body.onload = async () => {
+	await php_cmd('read_credential_cache').then((msg) => {//check login validity
+		const obj = JSON.parse(stringEncrypter(msg, 'decode', 6));
+		if (obj['rank'] != 'admin' && !obj['login']) window.location.assign('./../index.html');
+	}).catch(err => alert(err));
 	php_cmd('get_admin_order_data').then((msg) => {
 		for (const obj of JSON.parse(msg)) {
-			activeOrders.push(new ActiveOrder(obj.placement_time, obj.pickup_time, obj.order, obj.comment).init());
+			activeOrders.push(new ActiveOrder(obj['user'], obj['placement_time'], obj['pickup_time'], obj['order'], obj['comment']).init());
 		}
 	}).catch(err => alert(err));
 }

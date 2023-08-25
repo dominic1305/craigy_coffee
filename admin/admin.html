@@ -20,7 +20,7 @@
 	<template id="admin-order-object-template">
 		<table class="admin-order-table">
 			<tr>
-				<th id="user" style="text-transform: capitalize;">User:</th>
+				<th id="user">User:</th>
 				<th id="pickup-time">Pickup Time:</th>
 				<th id="placement-time">Placement Time:</th>
 				<th id="cost">cost:</th>
@@ -43,9 +43,15 @@
 		</table>
 	</template>
 
-	<main></main>
+	<div class="navbar">
+		<img src="./../img/logo.jpg" style="height: 100px;" alt="logo" draggable="false" onclick="window.location.assign('./../index.html')">
+		<p style="cursor: auto;">employee terminal</p>
+		<p id="logout-btn">logout</p>
+	</div>
 
-	<script defer src="./../main.js"></script>
+	<main style="margin-top: 10px;"></main>
+
+	<script src="./../main.js"></script>
 	<script defer src="./admin.js"></script>
 </body>
 </html>

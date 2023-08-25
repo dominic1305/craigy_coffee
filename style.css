@@ -429,6 +429,12 @@ main {
 			padding: 2px 5px 2px 0;
 		}
 	}
+	& .error-msg {
+		display: none;
+		font-size: 15px;
+		color: red;
+		text-transform: capitalize;
+	}
 	& .submit-btn {
 		margin-top: 15px;
 		width: max-content;
@@ -441,5 +447,84 @@ main {
 		&:hover {
 			transform: scale(1.1);
 		}
+	}
+}
+
+.navbar {
+	padding: 5px 5px 0 5px;
+	background-color: #bebebe;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	& > * {
+		padding: 0 20px;
+		cursor: pointer;
+	}
+	& > p {
+		user-select: none;
+		text-transform: capitalize;
+		cursor: pointer;
+	}
+	& #logout-btn {
+		position: absolute;
+		right: 0;
+	}
+}
+
+.index-input-container {
+	user-select: none;
+	height: max-content;
+	width: max-content;
+	margin-left: 5vw;
+	text-transform: capitalize;
+	& a {
+		background-color: skyblue;
+		text-decoration: none;
+		color: black;
+		display: block;
+		margin: 15px 0;
+		padding: 5px 10px;
+		border-radius: 10px;
+		transition: 150ms;
+		cursor: pointer;
+		text-align: center;
+		border: 2px solid black;
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+	& a:last-child {
+		margin-top: 40px;
+	}
+}
+
+.index-carousel {
+	overflow: hidden;
+	height: 50vh;
+	width: 40vw;
+	white-space: nowrap;
+	margin-right: 5vw;
+	position: relative;
+	& img {
+		object-fit: cover;
+		width: inherit;
+		height: inherit;
+		position: absolute;
+		top: 0;
+	}
+	& img.active {
+		transition: 750ms ease-in-out;
+		visibility: visible;
+		transform: translateX(0%);
+	}
+	& img.inactive {
+		transition: 0ms;
+		visibility: hidden;
+		transform: translateX(100%);
+	}
+	& img.offload {
+		transition: 750ms ease-in-out;
+		visibility: visible;
+		transform: translateX(-100%);
 	}
 }

@@ -1,7 +1,13 @@
 'use strict';
 
 void function() {
-	if (window.location.href.includes('.html')) document.body.innerHTML += '<iframe id="server" style="display: none;" src="./../php_server.php"></iframe>';
+	if (window.location.href.includes('.html')) {
+		document.body.innerHTML += '<iframe id="server" style="display: none;" src="./../php_server.php"></iframe>';
+		document.querySelector('#logout-btn').addEventListener('click', async () => {
+			await php_cmd('clear_credential_cache');
+			window.location.assign('./../index.html');
+		});
+	}
 }();
 
 function php_cmd(cmd = 'test_response', input_data) {
@@ -10,7 +16,7 @@ function php_cmd(cmd = 'test_response', input_data) {
 		window.addEventListener('message', (e) => {//listen for server response
 			const msg = JSON.parse(stringEncrypter(e.data, 'decode', 32));
 			if (msg.cmd != cmd) return reject('invalid command response');
-			else if (String(msg.response).includes('SERVER ERROR:')) return reject(msg.response);
+			else if (String(msg.response).includes('ERROR:')) return reject(msg.response);
 			return resolve(msg.response);
 		}, {once: true});
 		setTimeout(() => {return reject('SERVER ERROR: timed out');}, 5000); //expire
@@ -86,13 +92,11 @@ function isPositive(val) {//returns if passed value is positve
 
 function findSubString(str, start, end = start) {//find math expresions within a string
 	const arr = String(str).split(''); let bool = false;
-	if (arr.filter((bin) => {if (bin == start || bin == end) return bin}).length == 2) {//brackets exist
+	if (arr.filter(bin => bin == start || bin == end).length == 2) {//brackets exist
 		return arr.map((bin) => {//return sub string
 			if (bin == start || bin == end) bool = !bool;
 			else if (bool) return bin;
-		}).filter((bin) => {//remove nulls
-			if (bin != null) return bin;
-		}).join('');
+		}).filter(bin => bin != null).join('');
 	} else return '';
 }
 
@@ -104,8 +108,8 @@ function stringEncrypter(str = '', method = 'encode', register = 16) {//converts
 			return enforceByteSize((bin.charCodeAt() + cypher).toString(register), register);
 		}).reverse()].join(' ');
 	} else if (method == 'decode') {//decode to string
-		const cypher = parseInt(findSubString(str, '[', ']'), register) || (() => {throw new Error('cannot find cypher')})();
-		const hash = findSubString(str, '{', '}') || (() => {throw new Error('cannot find hash code')})();
+		const cypher = parseInt(findSubString(str, '[', ']'), register) || void function() {throw new Error('cannot find cypher')}();
+		const hash = findSubString(str, '{', '}') || void function() {throw new Error('cannot find hash code')}();
 		const finalStr = String(str).split(' ').reverse().slice(0, -2).map((bin) => {//translate characters
 			return String.fromCharCode(parseInt(bin, register) - cypher);
 		}).join('');
@@ -122,7 +126,7 @@ function enforceByteSize(str, register) {//adds zeros to stay within byte size
 	return String(str);
 }
 
-function hashGen (str, seed) {
+function hashGen(str, seed) {//thank you smart internet man
 	let h1 = 0xdeadbeef ^ seed;
 	let h2 = 0x41c6ce57 ^ seed;
 	for(let i = 0; i < str.length; i++) {
