@@ -3,13 +3,13 @@
 let invalidInputFieldAnimation;
 
 document.querySelector('.submit-btn').addEventListener('click', () => {
-    try {
-        var obj = {
-            username: document.querySelector('#username').value || void function() {throw 1}(),
-            password: document.querySelector('#password').value || void function() {throw 2}(),
-        }
-    } catch (error) {//error animation
-        clearInterval(invalidInputFieldAnimation);
+	try {
+		var obj = {
+			username: document.querySelector('#username').value || void function() {throw 1}(),
+			password: document.querySelector('#password').value || void function() {throw 2}(),
+		}
+	} catch (error) {//error animation
+		clearInterval(invalidInputFieldAnimation);
 		let opacity = 100;
 		document.querySelector(`.login-container tr:nth-child(${error})`).style.backgroundColor = 'rgba(255, 0, 0, 1)';
 		invalidInputFieldAnimation = setInterval(() => {//fade animation
@@ -21,16 +21,16 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 			}
 		}, 10);
 		return;
-    }
-    php_cmd('admin_login_data_check', obj).then(async (msg) => {
-        const obj = JSON.parse(msg);
-        if (obj['username'] && obj['password']) {
-            await php_cmd('write_credential_cache', stringEncrypter(JSON.stringify({login: true, rank: 'admin'}), 'encode', 6));
-            window.location.assign('./../admin/admin.html');
-        } else {//display error
-            document.querySelector('.error-msg').style.display = 'block';
-            document.querySelector('#username').value = '';
-            document.querySelector('#password').value = '';
-        }
-    }).catch(err => alert(err));
+	}
+	php_cmd('admin_login_data_check', obj).then(async (msg) => {
+		const obj = JSON.parse(msg);
+		if (obj['username'] && obj['password']) {
+			await php_cmd('write_credential_cache', stringEncrypter(JSON.stringify({login: true, rank: 'admin'}), 'encode', 6));
+			window.location.assign('./../admin/admin.html');
+		} else {//display error
+			document.querySelector('.error-msg').style.display = 'block';
+			document.querySelector('#username').value = '';
+			document.querySelector('#password').value = '';
+		}
+	}).catch(err => alert(err));
 });

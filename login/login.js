@@ -29,8 +29,8 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 			window.location.assign('./../order_page/orders.html');
 		} else {//display error
 			document.querySelector('.error-msg').style.display = 'block';
-            document.querySelector('#username').value = '';
-            document.querySelector('#password').value = '';
+			document.querySelector('#username').value = '';
+			document.querySelector('#password').value = '';
 		}
 	}).catch(err => alert(err));
 });
