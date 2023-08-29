@@ -96,7 +96,7 @@
 
 		window.addEventListener('message', (e) => {//receive messages from parent
 			const msg = JSON.parse(stringEncrypter(e.data, 'decode', 16));
-			localStorage['current_cmd'] = stringEncrypter(msg['cmd'], 'encode', 36);
+			localStorage['current_cmd'] = stringEncrypter(msg['cmd'], 'encode', 32);
 			switch (msg['cmd']) {
 				case 'write_credential_cache':
 					localStorage['user_data'] = msg['val'];
@@ -120,7 +120,7 @@
 		});
 
 		function sendMessage(response) {
-			window.parent.postMessage(stringEncrypter(JSON.stringify({cmd: stringEncrypter(localStorage['current_cmd'], 'decode', 36), response: response}), 'encode', 32), '*');
+			window.parent.postMessage(stringEncrypter(JSON.stringify({cmd: stringEncrypter(localStorage['current_cmd'], 'decode', 32), response: response}), 'encode', 32), '*');
 		}
 	</script>
 </body>

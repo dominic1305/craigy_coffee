@@ -90,28 +90,42 @@ function isPositive(val) {//returns if passed value is positve
 	return (Math.abs(val) == val);
 }
 
-function findSubString(str, start, end = start) {//find math expresions within a string
-	const arr = String(str).split(''); let bool = false;
-	if (arr.filter(bin => bin == start || bin == end).length == 2) {//brackets exist
-		return arr.map((bin) => {//return sub string
-			if (bin == start || bin == end) bool = !bool;
-			else if (bool) return bin;
-		}).filter(bin => bin != null).join('');
-	} else return '';
+function getShuffledArr(length) {
+	const arr = [];
+	for (let i = 0; i < length; i++) arr.push(i);
+	return arr.sort(() => (Boolean(Math.floor(Math.random() * 2))) ? 1 : -1);
+}
+
+String.prototype.splitSpace = function(spaces) {
+	let arr = [];
+	for (let i = 0; i < this.length; i += spaces) {
+		arr.push(this.slice(i, i + spaces));
+	}
+	return arr;
+}
+
+function findSubString(str, start, end = start) {//find substring within given brackets
+	let bool = false;
+	return String(str).split('').map((bin) => {
+		if (bin == start || bin == end) bool = !bool;
+		else if (bool) return bin;
+	}).filter(bin => bin != null).join('');
 }
 
 function stringEncrypter(str = '', method = 'encode', register = 16) {//converts ascii to hex and vice versa
-	if (register < 2 || register > 36) throw new Error(`invalid register: ${register}`);
+	if (register < 2 || register > 32) throw new Error(`invalid register: ${register}`);
 	if (method == 'encode') {//encode a string
 		const cypher = Math.floor(Math.random() * (100 - 10) + 10);
-		return [`[${enforceByteSize(cypher.toString(register), register)}]`, `{${hashGen(str, cypher)}}`, ...String(str).split('').map((bin) => {
-			return enforceByteSize((bin.charCodeAt() + cypher).toString(register), register);
+		const substiutionArr = getShuffledArr(256).map(bin => enforceByteSize(bin.toString(register), register));
+		return [`[${enforceByteSize(cypher.toString(register), register)}]`, `{${hashGen(str, cypher)}}`, `(${substiutionArr.join('')})`, ...String(str).split('').map((bin) => {
+			return substiutionArr[parseInt(enforceByteSize((bin.charCodeAt() + cypher).toString(register), register), register)];
 		}).reverse()].join(' ');
 	} else if (method == 'decode') {//decode to string
 		const cypher = parseInt(findSubString(str, '[', ']'), register) || void function() {throw new Error('cannot find cypher')}();
 		const hash = findSubString(str, '{', '}') || void function() {throw new Error('cannot find hash code')}();
-		const finalStr = String(str).split(' ').reverse().slice(0, -2).map((bin) => {//translate characters
-			return String.fromCharCode(parseInt(bin, register) - cypher);
+		const substiutionArr = findSubString(str, '(', ')').splitSpace((255).toString(register).length) || void function () {throw new Error('cannot find substiution array')}();
+		const finalStr = String(str).split(' ').reverse().slice(0, -3).map((bin) => {//translate characters
+			return String.fromCharCode(substiutionArr.indexOf(bin) - cypher);
 		}).join('');
 		if (hashGen(finalStr, cypher) != hash) throw new Error(`invalid hash: ${hash}`);
 		else return finalStr;
@@ -129,7 +143,7 @@ function enforceByteSize(str, register) {//adds zeros to stay within byte size
 function hashGen(str, seed) {//thank you smart internet man
 	let h1 = 0xdeadbeef ^ seed;
 	let h2 = 0x41c6ce57 ^ seed;
-	for(let i = 0; i < str.length; i++) {
+	for (let i = 0; i < str.length; i++) {
 		h1 = Math.imul(h1 ^ str.charCodeAt(i), 2654435761);
 		h2 = Math.imul(h2 ^ str.charCodeAt(i), 1597334677);
 	}
