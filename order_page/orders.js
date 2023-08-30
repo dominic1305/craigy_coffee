@@ -123,10 +123,10 @@ document.body.onload = async () => {
 			menuItems.push(new MenuItem(obj.item, obj.cost).init());
 		}
 	}).catch(err => alert(err));
-	let date = new Date().setDay(1);
+	let date = new Date();
 	document.querySelector('#pick-up-date').value = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 	document.querySelector('#pick-up-date').min = document.querySelector('#pick-up-date').value;
-	date = new Date(date.valueOf() + 864e+5 * 4); //864e+5 milliseconds = 1 day offset
+	date = new Date(date.setDay(1).valueOf() + 864e+5 * 4); //864e+5 milliseconds = 1 day offset
 	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`); //set max date value
 }
 

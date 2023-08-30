@@ -34,3 +34,7 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 		}
 	}).catch(err => alert(err));
 });
+
+document.addEventListener('keyup', (e) => {
+	if (e.key == 'Enter') document.querySelector('.submit-btn').click();
+});

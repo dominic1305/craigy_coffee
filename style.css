@@ -273,6 +273,7 @@ main {
 				}
 			}
 			& td {
+				text-transform: capitalize;
 				padding: 2px 5px;
 				text-align: right;
 				user-select: none;

@@ -52,7 +52,7 @@
 
 	<div class="navbar">
 		<img src="./../img/logo.jpg" style="height: 100px;" alt="logo" draggable="false" onclick="window.location.assign('./../index.html')">
-		<p id="welcome-txt">welcome user</p>
+		<p id="welcome-txt" style="cursor: auto;">welcome user</p>
 		<p id="logout-btn">logout</p>
 	</div>
 
@@ -92,10 +92,10 @@
 		<div class="order-placement-menu-body">
 			<textarea id="order-comment" cols="60" rows="10" placeholder="User Comment"></textarea>
 			<div class="edit-order-btn">Edit Order</div>
-			<div class="pickup-input-container">
+			<div class="pickup-input-container" style="user-select: none;">
 				<p>Pick Up Time</p>
-				<p class="time-select">8:15<input type="radio" name="time" data-time="8:15"></p>
-				<p class="time-select">8:30<input type="radio" name="time" data-time="8:30"></p>
+				<p class="time-select">8:00 - 8:15<input type="radio" name="time" data-time="8:15" style="cursor: pointer;"></p>
+				<p class="time-select">8:15 - 8:30<input type="radio" name="time" data-time="8:30" style="cursor: pointer;"></p>
 				<input id="pick-up-date" type="date">
 			</div>
 			<p class="total-price">$0.00</p>
