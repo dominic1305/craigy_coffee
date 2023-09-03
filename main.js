@@ -3,9 +3,12 @@
 void function() {
 	if (window.location.href.includes('.html')) {
 		document.body.innerHTML += '<iframe id="server" style="display: none;" src="./../php_server.php"></iframe>';
-		document.querySelector('#logout-btn').addEventListener('click', async () => {
-			await php_cmd('clear_credential_cache');
-			window.location.assign('./../index.html');
+		document.querySelectorAll('.navbar > p').forEach((bin) => {
+			if (bin.id == 'logout-btn') bin.addEventListener('click', async () => {
+				await php_cmd('clear_credential_cache');
+				window.location.assign('./../index.html');
+			});
+			if (bin.style.cursor == '') bin.style.setProperty('--const-width', `${parseInt(window.getComputedStyle(bin).width) + 10}px`);
 		});
 	}
 }();
@@ -15,9 +18,9 @@ function php_cmd(cmd = 'test_response', input_data) {
 		document.querySelector('#server').contentWindow.postMessage(stringEncrypter(JSON.stringify({cmd: cmd, val: input_data}), 'encode', 16), '*');
 		window.addEventListener('message', (e) => {//listen for server response
 			const msg = JSON.parse(stringEncrypter(e.data, 'decode', 32));
-			if (msg.cmd != cmd) return reject('invalid command response');
-			else if (String(msg.response).includes('ERROR:')) return reject(msg.response);
-			return resolve(msg.response);
+			if (msg['cmd'] != cmd) return reject('invalid command response');
+			else if (String(msg['response']).includes('ERROR:')) return reject(msg['response']);
+			return resolve(msg['response']);
 		}, {once: true});
 		setTimeout(() => {return reject('SERVER ERROR: timed out');}, 5000); //expire
 	});

@@ -62,9 +62,11 @@ let activeOrders = [new ActiveOrder()].filter(() => false);
 document.body.onload = async () => {
 	await php_cmd('read_credential_cache').then((msg) => {//check login validity
 		const obj = JSON.parse(stringEncrypter(msg, 'decode', 6));
-		if (obj['rank'] != 'admin' && !obj['login']) window.location.assign('./../index.html');
+		if (!obj['login'] && obj['rank'] != 'user') {//invalid login
+			window.location.assign('./../index.html');
+		} else document.querySelector('#welcome-txt').innerHTML = `welcome ${obj['user']}`;
 	}).catch(err => alert(err));
-	php_cmd('get_admin_order_data').then((msg) => {
+	php_cmd('get_user_orders', document.querySelector('#welcome-txt').innerHTML.slice(8)).then((msg) => {
 		for (const obj of JSON.parse(msg)) activeOrders.push(new ActiveOrder(obj['user'], obj['placement_time'], obj['pickup_time'], obj['order'], obj['comment']).init());
-	}).catch(err => alert(err));
+	});
 }

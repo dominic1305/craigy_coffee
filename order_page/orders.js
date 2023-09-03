@@ -8,7 +8,7 @@ class MenuItem {
 		this.quantity = 1;
 	}
 	get element() {
-		return document.querySelector(`#${this.name.replaceAll(' ', '-')}`);
+		return document.querySelector(`.menu-item:nth-child(${menuItems.indexOf(this) + 1})`);
 	}
 	get order() {
 		return new OrderItem(this.name, this.cost, this.element.querySelector('#milk-type').value, this.sugars, Boolean(Number(document.querySelector('.biscuit-inclusion').dataset['state'])));
@@ -31,40 +31,41 @@ class MenuItem {
 	}
 	init() {
 		document.querySelector('main').appendChild(document.querySelector('#menu-item-template').content.cloneNode(true));
-		document.querySelector('.menu-item:last-child').id = this.name.replaceAll(' ', '-');
-		this.element.querySelector('#item-name').innerHTML = this.name;
-		this.element.querySelector('#menu-item-img').src = `./img/${this.name.replaceAll(' ', '_')}.png`;
-		this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost)}`;
-		this.element.querySelector('#quantity-selector #decrease').addEventListener('click', () => {//decrease quantity
-			if (this.quantity <= 1) return; //go no smaller
-			this.quantity--;
-			this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
-			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
-		});
-		this.element.querySelector('#quantity-selector #increase').addEventListener('click', () => {//increase quantity
-			if (this.quantity >= 50) return; //go no higher
-			this.quantity++;
-			this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
-			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
-		});
-		this.element.querySelector('#sugar-selector #decrease').addEventListener('click', () => {//decrease sugar
-			if (this.sugars <= 0) return; //go no smaller
-			this.sugars--;
-			this.element.querySelector('#sugar-amount').innerHTML = this.sugars;
-		});
-		this.element.querySelector('#sugar-selector #increase').addEventListener('click', () => {//increase sugar
-			if (this.sugars >= 3) return; //go no higher
-			this.sugars++;
-			this.element.querySelector('#sugar-amount').innerHTML = this.sugars;
-		});
-		this.element.querySelector('#add-to-order').addEventListener('click', () => {//add to order array
-			for (let i = 0; i < this.quantity; i++) {
-				if (currentOrder.length >= 50) {this.error('Invalid: Too Many Order Items'); break;}
-				currentOrder.push(this.order);
-			}
-			if (currentOrder.length > 0) togglePlacementMenu(true);
-			document.querySelector('.total-price').innerHTML = `$${suffixApplier(currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count))}`;
-		});
+		setTimeout(() => {//wait for element to load fully
+			this.element.querySelector('#item-name').innerHTML = this.name;
+			this.element.querySelector('#menu-item-img').src = `./img/${this.name.replaceAll(' ', '_')}.png`;
+			this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost)}`;
+			this.element.querySelector('#quantity-selector #decrease').addEventListener('click', () => {//decrease quantity
+				if (this.quantity <= 1) return; //go no smaller
+				this.quantity--;
+				this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
+				this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
+			});
+			this.element.querySelector('#quantity-selector #increase').addEventListener('click', () => {//increase quantity
+				if (this.quantity >= 50) return; //go no higher
+				this.quantity++;
+				this.element.querySelector('#quantity-amount').innerHTML = this.quantity;
+				this.element.querySelector('#cost').innerHTML = `$${suffixApplier(this.cost * this.quantity)}`;
+			});
+			this.element.querySelector('#sugar-selector #decrease').addEventListener('click', () => {//decrease sugar
+				if (this.sugars <= 0) return; //go no smaller
+				this.sugars--;
+				this.element.querySelector('#sugar-amount').innerHTML = this.sugars;
+			});
+			this.element.querySelector('#sugar-selector #increase').addEventListener('click', () => {//increase sugar
+				if (this.sugars >= 3) return; //go no higher
+				this.sugars++;
+				this.element.querySelector('#sugar-amount').innerHTML = this.sugars;
+			});
+			this.element.querySelector('#add-to-order').addEventListener('click', () => {//add to order array
+				for (let i = 0; i < this.quantity; i++) {
+					if (currentOrder.length >= 50) {this.error('Invalid: Too Many Order Items'); break;}
+					currentOrder.push(this.order);
+				}
+				if (currentOrder.length > 0) togglePlacementMenu(true);
+				document.querySelector('.total-price').innerHTML = `$${suffixApplier(currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count))}`;
+			});
+		}, 10);
 		return this;
 	}
 }
@@ -118,16 +119,17 @@ document.body.onload = async () => {
 			window.location.assign('./../index.html');
 		} else document.querySelector('#welcome-txt').innerHTML = `welcome ${obj['user']}`;
 	}).catch(err => alert(err));
+	await php_cmd('get_user_orders', document.querySelector('#welcome-txt').innerHTML.slice(8)).then((msg) => {
+		if (JSON.parse(msg).length != 0) document.querySelector('#active-orders').style.visibility = 'visible';
+	}).catch(err => alert(err));
 	php_cmd('get_menu_data').then((msg) => {
-		for (const obj of JSON.parse(msg)) {
-			menuItems.push(new MenuItem(obj.item, obj.cost).init());
-		}
+		for (const obj of JSON.parse(msg)) menuItems.push(new MenuItem(obj.item, obj.cost).init());
 	}).catch(err => alert(err));
 	let date = new Date();
 	document.querySelector('#pick-up-date').value = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 	document.querySelector('#pick-up-date').min = document.querySelector('#pick-up-date').value;
 	date = new Date(date.setDay(1).valueOf() + 864e+5 * 4); //864e+5 milliseconds = 1 day offset
-	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`); //set max date value
+	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 }
 
 let invalidPickupTimeAnimation;

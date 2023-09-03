@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./../style.css">
+	<link rel="icon" href="./../img/favicon.ico" type="image/x-icon">
 	<title>Orders</title>
 </head>
 <body>
@@ -53,6 +54,7 @@
 	<div class="navbar">
 		<img src="./../img/logo.jpg" style="height: 100px;" alt="logo" draggable="false" onclick="window.location.assign('./../index.html')">
 		<p id="welcome-txt" style="cursor: auto;">welcome user</p>
+		<p id="active-orders" style="visibility: hidden;" onclick="window.location.assign('./../user_orders/user_orders.html')">active orders</p>
 		<p id="logout-btn">logout</p>
 	</div>
 
@@ -104,7 +106,7 @@
 		</div>
 	</div>
 
-	<script defer src="./../main.js"></script>
+	<script src="./../main.js"></script>
 	<script defer src="./orders.js"></script>
 </body>
 </html>
