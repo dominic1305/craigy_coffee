@@ -118,16 +118,17 @@ document.body.onload = async () => {
 			window.location.assign('./../index.html');
 		} else document.querySelector('#welcome-txt').innerHTML = `welcome ${obj['user']}`;
 	}).catch(err => alert(err));
+	await php_cmd('get_user_orders', document.querySelector('#welcome-txt').innerHTML.slice(8)).then((msg) => {
+		if (JSON.parse(msg).length != 0) document.querySelector('#active-orders').style.visibility = 'visible';
+	}).catch(err => alert(err));
 	php_cmd('get_menu_data').then((msg) => {
-		for (const obj of JSON.parse(msg)) {
-			menuItems.push(new MenuItem(obj.item, obj.cost).init());
-		}
+		for (const obj of JSON.parse(msg)) menuItems.push(new MenuItem(obj.item, obj.cost).init());
 	}).catch(err => alert(err));
 	let date = new Date();
 	document.querySelector('#pick-up-date').value = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 	document.querySelector('#pick-up-date').min = document.querySelector('#pick-up-date').value;
 	date = new Date(date.setDay(1).valueOf() + 864e+5 * 4); //864e+5 milliseconds = 1 day offset
-	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`); //set max date value
+	document.querySelector('#pick-up-date').max = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 }
 
 let invalidPickupTimeAnimation;

@@ -5,9 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="./../style.css">
 	<link rel="icon" href="./../img/favicon.ico" type="image/x-icon">
-	<title>Admin</title>
+	<title>User Orders</title>
 </head>
 <body>
+
 	<template id="active-order-row-template">
 		<tr id="active-order-row">
 			<td id="item"></td>
@@ -25,8 +26,8 @@
 				<th id="pickup-time">Pickup Time:</th>
 				<th id="placement-time">Placement Time:</th>
 				<th id="cost">cost:</th>
-				<th id="comment-btn"><img src="./img/file_icon.svg" alt="comment_icon"></th>
-				<th id="delete"><img src="./img/bin.svg" alt="bin_icon"></th>
+				<th id="comment-btn"><img src="./../admin/img/file_icon.svg" alt="comment_icon"></th>
+				<th id="delete"><img src="./../admin/img/bin.svg" alt="bin_icon"></th>
 			</tr>
 			<tr>
 				<td colspan="6">
@@ -46,13 +47,14 @@
 
 	<div class="navbar">
 		<img src="./../img/logo.jpg" style="height: 100px;" alt="logo" draggable="false" onclick="window.location.assign('./../index.html')">
-		<p style="cursor: auto;">employee terminal</p>
+		<p id="welcome-txt" style="cursor: auto;">welcome user</p>
+		<p id="active-orders" onclick="window.location.assign('./../order_page/orders.html')">place order</p>
 		<p id="logout-btn">logout</p>
 	</div>
 
 	<main style="margin-top: 10px;"></main>
 
 	<script src="./../main.js"></script>
-	<script defer src="./admin.js"></script>
+	<script defer src="./user_orders.js"></script>
 </body>
 </html>

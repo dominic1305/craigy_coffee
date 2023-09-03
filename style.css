@@ -322,7 +322,6 @@ main {
 	& > tbody > tr:first-child {
 		background-color: #585858;
 		color: white;
-		letter-spacing: 1px;
 		& th {
 			width: 20%;
 		}
@@ -460,6 +459,30 @@ main {
 	& > * {
 		padding: 0 20px;
 		cursor: pointer;
+		position: relative;
+	}
+	& p:not([style = 'cursor: auto;']) {
+		--const-width: 50px;
+		--width: 0px;
+		--opacity: 0%;
+		&::before {
+			width: var(--width);
+			height: 2px;
+			content: '';
+			opacity: var(--opacity);
+			transition: 150ms;
+			border: 1px solid black;
+			border-radius: 2px;
+			background-color: skyblue;
+			transform: translateX(-50%);
+			position: absolute;
+			top: 100%;
+			left: 50%;
+		}
+		&:hover {
+			--opacity: 100%;
+			--width: var(--const-width);
+		}
 	}
 	& > p {
 		user-select: none;

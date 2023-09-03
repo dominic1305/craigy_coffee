@@ -70,13 +70,17 @@
 					break;
 				case "user_signup": //TEST: to be updated with server response | return bool obj of available account details
 					$obj = (array) [
-						"username" => $input->val->username == "abc",
+						"username_str" => $input->val->username,
+						"username_bool" => $input->val->username == "abc",
 						"password" => $input->val->password == "abc",
 					];
 					printf("<p id=\"php-response\">%s</p>", json_encode($obj));
 					break;
 				case "insert_new_user_credentials": //TEST: to be updated with server response | inset new user account entry
 					printf("<p id=\"php-response\">%s</p>", true);
+					break;
+				case "get_user_orders": //TEST: to be update with server response | returns only a single users active orders
+					printf("<p id=\"php-response\">%s</p>", '[{"user":"abc","placement_time":1692885268369,"pickup_time":1692570600000,"order":[{"item":"flat white","cost":4.5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"cappuccino","cost":4.5,"milk":"dairy","sugars":1,"biscuit":false},{"item":"cappuccino","cost":4.5,"milk":"dairy","sugars":1,"biscuit":false},{"item":"hot chocolate","cost":4.5,"milk":"dairy","sugars":3,"biscuit":false}],"comment":""},{"user":"abc","placement_time":1692885293752,"pickup_time":1692569700000,"order":[{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false}],"comment":"this is a comment, yay!"}]');
 					break;
 				default: printf("<p id=\"php-response\">SERVER ERROR: invalid command</p>"); break;
 			}
