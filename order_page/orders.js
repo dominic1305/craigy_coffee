@@ -118,13 +118,13 @@ document.body.onload = async () => {
 		if (!obj['login'] && obj['rank'] != 'user') {//invalid login
 			window.location.assign('./../index.html');
 		} else document.querySelector('#welcome-txt').innerHTML = `welcome ${obj['user']}`;
-	}).catch(err => alert(err));
+	}).catch(err => notification(err));
 	await php_cmd('get_user_orders', document.querySelector('#welcome-txt').innerHTML.slice(8)).then((msg) => {
 		if (JSON.parse(msg).length != 0) document.querySelector('#active-orders').style.visibility = 'visible';
-	}).catch(err => alert(err));
+	}).catch(err => notification(err));
 	php_cmd('get_menu_data').then((msg) => {
 		for (const obj of JSON.parse(msg)) menuItems.push(new MenuItem(obj.item, obj.cost).init());
-	}).catch(err => alert(err));
+	}).catch(err => notification(err));
 	let date = new Date();
 	document.querySelector('#pick-up-date').value = formatDate(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
 	document.querySelector('#pick-up-date').min = document.querySelector('#pick-up-date').value;
@@ -188,7 +188,7 @@ function placeOrder(override = false) {
 	if (currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count) >= 100 && !override) {//check with user
 		confirmPrompt(`are you sure you want to spend $${suffixApplier(currentOrder.map(bin => bin.cost).reduce((bin, count) => bin + count))} on this order`).then((bool) => {
 			if (bool) placeOrder(true);
-		}).catch(err => alert(err));
+		}).catch(err => notification(err));
 	} else try {
 		const obj = {
 			user: document.querySelector('#welcome-txt').innerHTML.slice(8),
@@ -200,7 +200,7 @@ function placeOrder(override = false) {
 		php_cmd('insert_order_data', obj).then((msg) => {
 			console.log(msg);
 			document.querySelector('.clear-order-modal-btn').click();
-		}).catch(err => alert(err));
+		}).catch(err => notification(err));
 	} catch (err) {
 		if (err != 0) console.error(err);
 	}

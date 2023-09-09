@@ -32,7 +32,7 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 			document.querySelector('#username').value = '';
 			document.querySelector('#password').value = '';
 		}
-	}).catch(err => alert(err));
+	}).catch(err => notification(err));
 });
 
 document.addEventListener('keyup', (e) => {

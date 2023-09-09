@@ -46,7 +46,7 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 				}
 			});
 		}
-	}).catch(err => alert(err))
+	}).catch(err => notification(err))
 });
 
 document.addEventListener('keyup', (e) => {
