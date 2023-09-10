@@ -2,7 +2,7 @@
 
 void function() {
 	if (window.location.href.includes('.html')) {
-		document.body.innerHTML += '<iframe id="server" style="display: none;" src="./../php_server.php"></iframe>';
+		document.body.innerHTML += `<iframe id="server" style="display: none;" src=".${(window.location.href.includes('index.html')) ? '' : '/..'}/php_server.php"></iframe>`;
 		document.querySelectorAll('.navbar > p').forEach((bin) => {
 			if (bin.id == 'logout-btn') bin.addEventListener('click', async () => {
 				await php_cmd('clear_credential_cache');
@@ -153,4 +153,21 @@ function hashGen(str, seed) {//thank you smart internet man
 	h1 = Math.imul(h1 ^ (h1 >> 16), 2246822507);
 	h2 = Math.imul(h2 ^ (h2 >> 16), 2246822507);
 	return (4294967296 * (2097151 & h2) + (h1 >> 0)).toString(32);
+}
+
+function notification(str) {//display a notification to the screen
+	if (document.querySelector('.notification-container') == null) {//add container if not present
+		const parent = document.createElement('div');
+		parent.className = 'notification-container';
+		document.body.appendChild(parent);
+	}
+	const element = document.createElement('p');
+	element.className = 'notification';
+	element.innerHTML = str;
+	document.querySelector('.notification-container').appendChild(element);
+	setTimeout(() => {//close animation
+		element.style.transition = '250ms ease-in-out';
+		element.style.transform = 'translate(-100%)';
+		setTimeout(() => document.querySelector('.notification-container').removeChild(element), 150);
+	}, 2000);
 }

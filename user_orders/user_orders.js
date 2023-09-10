@@ -22,12 +22,12 @@ class ActiveOrder {
 		return `${time} ${date}`;
 	}
 	delete() {
-		php_cmd('delete_active_order', this).then((msg) => {
-			if (!Boolean(msg)) return;
+		php_cmd('delete_active_order', this.placement_time.valueOf()).then((msg) => {
+			if (!JSON.parse(msg)) throw new Error("unable to delete order");
 			document.querySelector('main').removeChild(this.element);
 			activeOrders[activeOrders.indexOf(this)] = null;
 			activeOrders = activeOrders.filter(bin => bin instanceof ActiveOrder);
-		}).catch(err => alert(err));
+		}).catch(err => notification(err));
 	}
 	loadComment() {
 		if (this.comment.length == 0) return; //there is no comment
@@ -40,7 +40,7 @@ class ActiveOrder {
 			this.element.querySelector('#pickup-time').innerHTML = `Pickup Time: ${this.formatted_pickup_time}`;
 			this.element.querySelector('#placement-time').innerHTML = `Placement Time: ${this.formatted_placement_time}`
 			this.element.querySelector('#cost').innerHTML = `Cost: $${suffixApplier(this.order.map(bin => bin.cost).reduce((bin, count) => bin + count))}`;
-			this.element.querySelector('#delete').addEventListener('click', () => confirmPrompt('are you sure you want to delete this order?').then(bool => (bool) ? this.delete() : 0).catch(err => alert(err)));
+			this.element.querySelector('#delete').addEventListener('click', () => confirmPrompt('are you sure you want to delete this order?').then(bool => (bool) ? this.delete() : 0).catch(err => notification(err)));
 			this.element.style.setProperty('--comment-text', `"${this.comment}"`);
 			this.element.querySelector('#comment-btn').addEventListener('click', () => this.loadComment());
 			for (const item of this.order) {//load each order item
@@ -65,8 +65,19 @@ document.body.onload = async () => {
 		if (!obj['login'] && obj['rank'] != 'user') {//invalid login
 			window.location.assign('./../index.html');
 		} else document.querySelector('#welcome-txt').innerHTML = `welcome ${obj['user']}`;
-	}).catch(err => alert(err));
+	}).catch(err => notification(err));
 	php_cmd('get_user_orders', document.querySelector('#welcome-txt').innerHTML.slice(8)).then((msg) => {
 		for (const obj of JSON.parse(msg)) activeOrders.push(new ActiveOrder(obj['user'], obj['placement_time'], obj['pickup_time'], obj['order'], obj['comment']).init());
 	});
 }
+
+document.querySelector('#delete-all').addEventListener('click', () => {
+	if (activeOrders.length == 0) return;
+	confirmPrompt('are you sure you want to delete every order?').then(bool => {
+		if (!bool) return;
+		setInterval(() => {
+			if (activeOrders.length == 0) window.location.assign('./../order_page/orders.html');
+			activeOrders[0].delete();
+		}, 300);
+	});
+});

@@ -13,77 +13,90 @@
 	</form>
 
 	<?php
+		require("./conn.php");
 		if (!empty($_POST["submit"])) {
-			$input = json_decode($_POST["input"]); //input structure = {cmd: string, val: any}
-			switch ($input->cmd) {
-				case "test_response": printf("<p id=\"php-response\">hello</p>"); break;
-				case "get_menu_data": //TEST: to be updated with server response | pull all menu items from SQL database
-					$data = (array) [
-						["item" => "flat white", "cost" => 4.5],
-						["item" => "cappuccino", "cost" => 4.5],
-						["item" => "latte", "cost" => 4.5],
-						["item" => "espresso", "cost" => 4.5],
-						["item" => "hot chocolate", "cost" => 4.5],
-						["item" => "chai latte", "cost" => 4.5],
-						["item" => "iced coffee", "cost" => 5],
-						["item" => "iced latte", "cost" => 5],
-					];
-					printf("<p id=\"php-response\">%s</p>", json_encode($data));
-					break;
-				case "insert_order_data": //TEST: to be updated with server response | insert new SQL entry and return success bool
-					$server_arr = (array) [//data push
-						"user" => $input->val->user,
-						"placement_time" => $input->val->placement_time,
-						"pickup_time" => $input->val->pickup_time,
-						"order" => json_encode($input->val->order),
-						"comment" => $input->val->comment,
-					];
-					$arr = (array) [//data pull
-						"user" => $server_arr["user"],
-						"placement_time" => $server_arr["placement_time"],
-						"pickup_time" => $server_arr["pickup_time"],
-						"order" => json_decode($server_arr["order"]),
-						"comment" => $server_arr["comment"],
-					];
-					printf("<p id=\"php-response\">%s</p>", json_encode($arr));
-					break;
-				case "get_admin_order_data": //TEST: to be updated with server response | pull all active orders from SQL database
-					printf("<p id=\"php-response\">%s</p>", '[{"user":"abc","placement_time":1692885268369,"pickup_time":1692570600000,"order":[{"item":"flat white","cost":4.5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"cappuccino","cost":4.5,"milk":"dairy","sugars":1,"biscuit":false},{"item":"cappuccino","cost":4.5,"milk":"dairy","sugars":1,"biscuit":false},{"item":"hot chocolate","cost":4.5,"milk":"dairy","sugars":3,"biscuit":false}],"comment":""},{"user":"abc","placement_time":1692885293752,"pickup_time":1692569700000,"order":[{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false}],"comment":"this is a comment, yay!"}]');
-					break;
-				case "delete_active_order": //TEST: to be updated with server response | delete SQL entry and return success bool
-					printf("<p id=\"php-response\">%s</p>", "true");
-					break;
-				case "user_login_data_check": //TEST: to be updated with server response | return bool obj of login detail validity
-					$obj = (array) [
-						"username_bool" => $input->val->username == "abc",
-						"username_str" => $input->val->username,
-						"password" => $input->val->password == "abc",
-					];
-					printf("<p id=\"php-response\">%s</p>", json_encode($obj));
-					break;
-				case "admin_login_data_check": //TEST: to be updated with server response | return bool obj of login detail validity
-					$obj = (array) [
-						"username" => $input->val->username == "admin",
-						"password" => $input->val->username == "admin",
-					];
-					printf("<p id=\"php-response\">%s</p>", json_encode($obj));
-					break;
-				case "user_signup": //TEST: to be updated with server response | return bool obj of available account details
-					$obj = (array) [
-						"username_str" => $input->val->username,
-						"username_bool" => $input->val->username == "abc",
-						"password" => $input->val->password == "abc",
-					];
-					printf("<p id=\"php-response\">%s</p>", json_encode($obj));
-					break;
-				case "insert_new_user_credentials": //TEST: to be updated with server response | inset new user account entry
-					printf("<p id=\"php-response\">%s</p>", true);
-					break;
-				case "get_user_orders": //TEST: to be update with server response | returns only a single users active orders
-					printf("<p id=\"php-response\">%s</p>", '[{"user":"abc","placement_time":1692885268369,"pickup_time":1692570600000,"order":[{"item":"flat white","cost":4.5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"cappuccino","cost":4.5,"milk":"dairy","sugars":1,"biscuit":false},{"item":"cappuccino","cost":4.5,"milk":"dairy","sugars":1,"biscuit":false},{"item":"hot chocolate","cost":4.5,"milk":"dairy","sugars":3,"biscuit":false}],"comment":""},{"user":"abc","placement_time":1692885293752,"pickup_time":1692569700000,"order":[{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false},{"item":"iced coffee","cost":5,"milk":"dairy","sugars":0,"biscuit":false}],"comment":"this is a comment, yay!"}]');
-					break;
-				default: printf("<p id=\"php-response\">SERVER ERROR: invalid command</p>"); break;
+			try {
+				$input = json_decode($_POST["input"]); //input structure = {cmd: string, val: any}
+				switch ($input->cmd) {
+					case "test_response": printf("<p id=\"php-response\">hello</p>"); break;
+					case "get_menu_data": //pull all menu items from SQL database
+						$data = (array) [];
+						$query = mysqli_query($conn, "SELECT * FROM menu_items ORDER BY cost ASC") or throwError("cannot find menu data");
+						while ($row = mysqli_fetch_array($query)) {
+							array_push($data, ["item" => $row["item"], "cost" => $row["cost"]]);
+						}
+						printf("<p id=\"php-response\">%s</p>", json_encode($data));
+						break;
+					case "insert_order_data": //insert new SQL entry and return success bool
+						mysqli_query($conn, sprintf("INSERT INTO active_orders (user, pickup_time, placement_time, order_JSON, comment) VALUES (\"%s\", %d, %d, '%s', \"%s\")", $input->val->user, $input->val->pickup_time, $input->val->placement_time, json_encode($input->val->order), $input->val->comment)) or throwError("unable to place order");
+						$order = mysqli_fetch_array(mysqli_query($conn, sprintf("SELECT DISTINCT * FROM active_orders WHERE placement_time = %d", $input->val->placement_time))) or throwError("unable to find order");
+						printf("<p id=\"php-response\">%s</p>", ($order["placement_time"] == $input->val->placement_time && $order["user"] == $input->val->user) ? "true" : "false");
+						break;
+					case "get_admin_order_data": //pull all active orders from SQL database
+						$query = mysqli_query($conn, "SELECT * FROM active_orders ORDER BY placement_time ASC") or throwError("unable to find order data");
+						$arr = (array) [];
+						while ($row = mysqli_fetch_array($query)) {
+							array_push($arr, ["user" => $row["user"], "placement_time" => (int) $row["placement_time"], "pickup_time" => (int) $row["pickup_time"], "order" => json_decode($row["order_JSON"]), "comment" => $row["comment"]]);
+						}
+						printf("<p id=\"php-response\">%s</p>", json_encode($arr));
+						break;
+					case "delete_active_order": //delete SQL entry and return success bool
+						mysqli_query($conn, sprintf("DELETE FROM active_orders WHERE placement_time = %d", $input->val)) or throwError("unable to delete order");
+						$data = mysqli_fetch_array(mysqli_query($conn, sprintf("SELECT DISTINCT * FROM active_orders WHERE placement_time = %d", $input->val)));
+						printf("<p id=\"php-response\">%s</p>", is_null($data) ? "true" : "false");
+						break;
+					case "user_login_data_check": //return bool obj of login detail validity
+						$data = mysqli_fetch_array(mysqli_query($conn, sprintf("SELECT DISTINCT * FROM users WHERE username = \"%s\" and password = \"%s\"", $input->val->username, $input->val->password)));
+						$obj = (array) [
+							"username_bool" => $input->val->username == $data["username"],
+							"username_str" => $input->val->username,
+							"password_bool" => $input->val->password == $data["password"],
+							"password_str" => $input->val->password,
+						];
+						printf("<p id=\"php-response\">%s</p>", json_encode($obj));
+						break;
+					case "admin_login_data_check": //return bool obj of login detail validity
+						$data = mysqli_fetch_array(mysqli_query($conn, sprintf("SELECT DISTINCT * FROM admin_users WHERE username = \"%s\" and password = \"%s\"", $input->val->username, $input->val->password)));
+						$obj = (array) [
+							"username_bool" => $input->val->username == $data["username"],
+							"username_str" => $input->val->username,
+							"password_bool" => $input->val->password == $data["password"],
+							"password_str" => $input->val->password,
+						];
+						printf("<p id=\"php-response\">%s</p>", json_encode($obj));
+						break;
+					case "user_signup": //return bool obj of available account details
+						$dataName = mysqli_fetch_array(mysqli_query($conn, sprintf("SELECT DISTINCT * FROM users WHERE username = \"%s\"", $input->val->username)));
+						$dataPwd = mysqli_fetch_array(mysqli_query($conn, sprintf("SELECT DISTINCT * FROM users WHERE password = \"%s\"", $input->val->password)));
+						$obj = (array) [
+							"username_bool" => $input->val->username == $dataName["username"],
+							"username_str" => $input->val->username,
+							"password_bool" => $input->val->password == $dataPwd["password"],
+							"password_str" => $input->val->password,
+						];
+						printf("<p id=\"php-response\">%s</p>", json_encode($obj));
+						break;
+					case "insert_new_user_credentials": //inset new user account entry
+						mysqli_query($conn, sprintf("INSERT INTO users (username, password) VALUES (\"%s\", \"%s\")", $input->val->username_str, $input->val->password_str)) or throwError("unable to insert user");
+						printf("<p id=\"php-response\">true</p>");
+						break;
+					case "get_user_orders": //returns only a single users active orders
+						$query = mysqli_query($conn, sprintf("SELECT * FROM active_orders WHERE user = \"%s\"", $input->val)) or throwError("unable to find order data");
+						$arr = (array) [];
+						while ($row = mysqli_fetch_array($query)) {
+							array_push($arr, ["user" => $row["user"], "placement_time" => (int) $row["placement_time"], "pickup_time" => (int) $row["pickup_time"], "order" => json_decode($row["order_JSON"]), "comment" => $row["comment"]]);
+						}
+						printf("<p id=\"php-response\">%s</p>", json_encode($arr));
+						break;
+					default: printf("<p id=\"php-response\">SERVER ERROR: invalid command</p>"); break;
+				}
+			} catch (Exception $err) {
+				printf("<p id=\"php-response\">SERVER ERROR: something went wrong: %s</p>", $err->getMessage());
 			}
+		}
+
+		function throwError($error) {//i shouldn't have to have a helper function to throw an error
+			throw new Exception($error);
 		}
 	?>
 
