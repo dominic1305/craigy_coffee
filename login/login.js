@@ -24,7 +24,7 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 	}
 	php_cmd('user_login_data_check', obj).then(async (msg) => {
 		const obj = JSON.parse(msg)
-		if (obj['username_bool'] && obj['password']) {//login user
+		if (obj['username_bool'] && obj['password_bool']) {//login user
 			await php_cmd('write_credential_cache', stringEncrypter(JSON.stringify({user: obj['username_str'], login: true, rank: 'user'}), 'encode', 6));
 			window.location.assign('./../order_page/orders.html');
 		} else {//display error

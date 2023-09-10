@@ -2,7 +2,7 @@
 
 void function() {
 	if (window.location.href.includes('.html')) {
-		document.body.innerHTML += '<iframe id="server" style="display: none;" src="./../php_server.php"></iframe>';
+		document.body.innerHTML += `<iframe id="server" style="display: none;" src=".${(window.location.href.includes('index.html')) ? '' : '/..'}/php_server.php"></iframe>`;
 		document.querySelectorAll('.navbar > p').forEach((bin) => {
 			if (bin.id == 'logout-btn') bin.addEventListener('click', async () => {
 				await php_cmd('clear_credential_cache');
@@ -165,15 +165,9 @@ function notification(str) {//display a notification to the screen
 	element.className = 'notification';
 	element.innerHTML = str;
 	document.querySelector('.notification-container').appendChild(element);
-	setTimeout(() => {
-		let opacity = 100;
-		const interval = setInterval(() => {//fade animation
-			opacity--;
-			element.style.opacity = `${opacity}%`;
-			if (opacity <= 0) {//fade is done
-				document.querySelector('.notification-container').removeChild(element);
-				clearInterval(interval);
-			}
-		}, 10);
+	setTimeout(() => {//close animation
+		element.style.transition = '250ms ease-in-out';
+		element.style.transform = 'translate(-100%)';
+		setTimeout(() => document.querySelector('.notification-container').removeChild(element), 150);
 	}, 2000);
 }

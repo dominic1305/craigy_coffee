@@ -24,7 +24,7 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 	}
 	php_cmd('admin_login_data_check', obj).then(async (msg) => {
 		const obj = JSON.parse(msg);
-		if (obj['username'] && obj['password']) {
+		if (obj['username_bool'] && obj['password_bool']) {
 			await php_cmd('write_credential_cache', stringEncrypter(JSON.stringify({login: true, rank: 'admin'}), 'encode', 6));
 			window.location.assign('./../admin/admin.html');
 		} else {//display error

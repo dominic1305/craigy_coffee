@@ -22,8 +22,8 @@ class ActiveOrder {
 		return `${time} ${date}`;
 	}
 	delete() {
-		php_cmd('delete_active_order', this).then((msg) => {
-			if (!Boolean(msg)) return;
+		php_cmd('delete_active_order', this.placement_time.valueOf()).then((msg) => {
+			if (!JSON.parse(msg)) throw new Error("unable to delete order");
 			document.querySelector('main').removeChild(this.element);
 			activeOrders[activeOrders.indexOf(this)] = null;
 			activeOrders = activeOrders.filter(bin => bin instanceof ActiveOrder);
@@ -70,3 +70,14 @@ document.body.onload = async () => {
 		for (const obj of JSON.parse(msg)) activeOrders.push(new ActiveOrder(obj['user'], obj['placement_time'], obj['pickup_time'], obj['order'], obj['comment']).init());
 	});
 }
+
+document.querySelector('#delete-all').addEventListener('click', () => {
+	if (activeOrders.length == 0) return;
+	confirmPrompt('are you sure you want to delete every order?').then(bool => {
+		if (!bool) return;
+		setInterval(() => {
+			if (activeOrders.length == 0) window.location.assign('./../order_page/orders.html');
+			activeOrders[0].delete();
+		}, 300);
+	});
+});

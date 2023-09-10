@@ -197,8 +197,8 @@ function placeOrder(override = false) {
 			order: currentOrder,
 			comment: document.querySelector('#order-comment').value,
 		};
-		php_cmd('insert_order_data', obj).then((msg) => {
-			console.log(msg);
+		php_cmd('insert_order_data', obj).then(() => {
+			document.querySelector('#active-orders').style.visibility = 'visible';
 			document.querySelector('.clear-order-modal-btn').click();
 		}).catch(err => notification(err));
 	} catch (err) {

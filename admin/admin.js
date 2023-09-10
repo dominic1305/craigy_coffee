@@ -22,8 +22,8 @@ class ActiveOrder {
 		return `${time} ${date}`;
 	}
 	delete() {
-		php_cmd('delete_active_order', this).then((msg) => {
-			if (!Boolean(msg)) return;
+		php_cmd('delete_active_order', this.placement_time.valueOf()).then((msg) => {
+			if (!JSON.parse(msg)) throw new Error("unable to delete order");
 			document.querySelector('main').removeChild(this.element);
 			activeOrders[activeOrders.indexOf(this)] = null;
 			activeOrders = activeOrders.filter(bin => bin instanceof ActiveOrder);

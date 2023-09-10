@@ -25,17 +25,17 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
 	php_cmd('user_signup', obj).then(async (msg) => {
 		const obj = JSON.parse(msg);
 		document.querySelector('.error-msg').style.display = 'none';
-		if (!obj['username'] && !obj['password']) {//account is available
+		if (!obj['username_bool'] && !obj['password_bool']) {//account is available
 			await php_cmd('insert_new_user_credentials', obj);
 			await php_cmd('write_credential_cache', stringEncrypter(JSON.stringify({user: obj['username_str'], login: true, rank: 'user'}), 'encode', 6));
 			window.location.assign('./../order_page/orders.html');
-		} else if (obj['username'] && !obj['password']) {//user already has account
+		} else if (obj['username_bool'] && !obj['password_bool']) {//user already has account
 			document.querySelector('.error-msg').innerHTML = 'user already has account';
 			document.querySelector('.error-msg').style.display = 'block';
-		} else if (!obj['username'] && obj['password']) {//password already in use
+		} else if (!obj['username_bool'] && obj['password_bool']) {//password already in use
 			document.querySelector('.error-msg').innerHTML = 'password already in use';
 			document.querySelector('.error-msg').style.display = 'block';
-		} else if (obj['username'] && obj['password']) {//existing account found
+		} else if (obj['username_bool'] && obj['password_bool']) {//existing account found
 			confirmPrompt('existing account found. would you like to sign in?').then(async (bool) => {
 				if (bool) {
 					await php_cmd('write_credential_cache', stringEncrypter(JSON.stringify({user: obj['username_str'], login: true, rank: 'user'}), 'encode', 6));
