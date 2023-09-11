@@ -121,7 +121,7 @@ function stringEncrypter(str = '', method = 'encode', register = 16) {//converts
 		const cypher = Math.floor(Math.random() * (100 - 10) + 10);
 		const substiutionArr = getShuffledArr(256).map(bin => enforceByteSize(bin.toString(register), register));
 		return [`[${enforceByteSize(cypher.toString(register), register)}]`, `{${hashGen(str, cypher)}}`, `(${substiutionArr.join('')})`, ...String(str).split('').map((bin) => {
-			return substiutionArr[parseInt(enforceByteSize((bin.charCodeAt() + cypher).toString(register), register), register)];
+			return substiutionArr[bin.charCodeAt() + cypher];
 		}).reverse()].join(' ');
 	} else if (method == 'decode') {//decode to string
 		const cypher = parseInt(findSubString(str, '[', ']'), register) || void function() {throw new Error('cannot find cypher')}();
@@ -137,9 +137,7 @@ function stringEncrypter(str = '', method = 'encode', register = 16) {//converts
 
 function enforceByteSize(str, register) {//adds zeros to stay within byte size
 	const registerLength = (255).toString(register).length;
-	while (String(str).length < registerLength) {
-		str = '0' + str;
-	}
+	while (String(str).length < registerLength) str = '0' + str;
 	return String(str);
 }
 

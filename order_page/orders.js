@@ -198,13 +198,13 @@ function placeOrder(override = false) {
 			comment: document.querySelector('#order-comment').value,
 		};
 		php_cmd('insert_order_data', obj).then((msg) => {
-			if (!JSON.parse(msg)) return;
-				document.querySelector('#active-orders').style.visibility = 'visible';
-				notification("order placed successfully");
-				document.querySelector('.clear-order-modal-btn').click();
+			if (!JSON.parse(msg)) throw new Error('unable to place order');
+			document.querySelector('#active-orders').style.visibility = 'visible';
+			notification("order placed successfully");
+			document.querySelector('.clear-order-modal-btn').click();
 		}).catch(err => notification(err));
 	} catch (err) {
-		if (err != 0) console.error(err);
+		if (err != 0) notification(err);
 	}
 }
 
