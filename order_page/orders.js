@@ -197,9 +197,11 @@ function placeOrder(override = false) {
 			order: currentOrder,
 			comment: document.querySelector('#order-comment').value,
 		};
-		php_cmd('insert_order_data', obj).then(() => {
-			document.querySelector('#active-orders').style.visibility = 'visible';
-			document.querySelector('.clear-order-modal-btn').click();
+		php_cmd('insert_order_data', obj).then((msg) => {
+			if (!JSON.parse(msg)) return;
+				document.querySelector('#active-orders').style.visibility = 'visible';
+				notification("order placed successfully");
+				document.querySelector('.clear-order-modal-btn').click();
 		}).catch(err => notification(err));
 	} catch (err) {
 		if (err != 0) console.error(err);
